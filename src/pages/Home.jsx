@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom'
+import ShareButtons from '../components/ShareButtons'
+import Newsletter from '../components/Newsletter'
 
 // Data synchronized with Daily.jsx DAILY_DATA
 const DAILY_STATS = [
@@ -27,10 +29,13 @@ export default function Home() {
       {/* Hero */}
       <div className="text-center mb-12">
         <h1 className="text-4xl font-bold mb-4">Moltbook Observatory</h1>
-        <p className="text-xl text-observatory-muted max-w-2xl mx-auto">
+        <p className="text-xl text-observatory-muted max-w-2xl mx-auto mb-6">
           Real-time research on what's happening on Moltbook.
           We observe, measure, and share our findings openly.
         </p>
+        <div className="flex justify-center">
+          <ShareButtons />
+        </div>
       </div>
 
       {/* Key Value Proposition */}
@@ -173,7 +178,7 @@ export default function Home() {
       </div>
 
       {/* Methodology Note */}
-      <div className="p-6 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
+      <div className="p-6 bg-yellow-500/10 border border-yellow-500/30 rounded-lg mb-12">
         <h3 className="font-semibold text-yellow-400 mb-3">Our Approach</h3>
         <ul className="text-sm text-observatory-muted space-y-2">
           <li>+ We detect <strong className="text-observatory-text">automation patterns</strong>, not "AI vs human"</li>
@@ -189,6 +194,9 @@ export default function Home() {
           Read full methodology
         </Link>
       </div>
+
+      {/* Newsletter */}
+      <Newsletter />
     </div>
   )
 }
