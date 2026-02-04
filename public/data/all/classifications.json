@@ -1,0 +1,291 @@
+{
+  "generated": "2026-02-03T12:30:00Z",
+  "methodology_version": "2.0",
+  "data_range": {
+    "start": "2026-01-28",
+    "end": "2026-02-03",
+    "days": 6,
+    "total_posts": 5289,
+    "total_comments": 24282
+  },
+
+  "categories": {
+    "LIKELY_AUTONOMOUS": {
+      "name": "Likely Autonomous",
+      "name_pl": "Prawdopodobnie autonomiczny",
+      "color": "#ef4444",
+      "icon": "🔴",
+      "confidence_range": [0.70, 0.85],
+      "criteria": {
+        "score_min": 4.0,
+        "avg_response_time_max": 30,
+        "timing_samples_min": 5
+      },
+      "description": "Account shows strong patterns suggesting full automation without human intervention.",
+      "description_pl": "Konto wykazuje wzorce silnie sugerujące pełną automatyzację bez ludzkiej interwencji.",
+      "what_it_means": [
+        "System responds automatically to new posts",
+        "Likely LLM + automatic trigger",
+        "Human may oversee but doesn't write manually"
+      ],
+      "why_not_100_percent": [
+        "Cannot rule out very fast human with API",
+        "Could be dedicated team working in shifts",
+        "Could be honeypot/experiment"
+      ]
+    },
+
+    "POSSIBLY_AUTOMATED": {
+      "name": "Possibly Automated",
+      "name_pl": "Możliwie zautomatyzowany",
+      "color": "#f97316",
+      "icon": "🟠",
+      "confidence_range": [0.50, 0.70],
+      "criteria": {
+        "score_min": 2.5,
+        "score_max": 4.0,
+        "avg_response_time_max": 60
+      },
+      "description": "Account shows automation signals but with less certainty.",
+      "description_pl": "Konto pokazuje sygnały automatyzacji, ale z mniejszą pewnością.",
+      "what_it_means": [
+        "May be AI agent with slower trigger",
+        "May be human using AI tools",
+        "May be partially automated workflow"
+      ]
+    },
+
+    "INSUFFICIENT_SIGNAL": {
+      "name": "Insufficient Signal",
+      "name_pl": "Niewystarczający sygnał",
+      "color": "#eab308",
+      "icon": "🟡",
+      "confidence_range": [0.30, 0.50],
+      "criteria": {
+        "score_min": 1.0,
+        "score_max": 2.5
+      },
+      "description": "Account has timing data but doesn't cross automation threshold.",
+      "description_pl": "Konto ma dane timing, ale nie przekraczają progu automatyzacji.",
+      "what_it_means": [
+        "May be human who sometimes responds quickly",
+        "May be AI with long processing time",
+        "Need more data"
+      ]
+    },
+
+    "LIKELY_HUMAN": {
+      "name": "Likely Human",
+      "name_pl": "Prawdopodobnie człowiek",
+      "color": "#22c55e",
+      "icon": "🟢",
+      "confidence_range": [0.60, 0.85],
+      "criteria": {
+        "score_max": 1.0,
+        "avg_response_time_min": 300,
+        "has_night_gap": true
+      },
+      "description": "Response patterns consistent with human typing speed.",
+      "description_pl": "Wzorce odpowiedzi zgodne z ludzkim tempem.",
+      "what_it_means": [
+        "Typing speed consistent with human",
+        "Sleep/work breaks visible",
+        "Irregularity typical for humans"
+      ]
+    },
+
+    "SCRIPTED_BOT": {
+      "name": "Scripted Bot",
+      "name_pl": "Bot skryptowy",
+      "color": "#8b5cf6",
+      "icon": "🟣",
+      "confidence_range": [0.90, 0.95],
+      "criteria": {
+        "repetition_rate_min": 0.90
+      },
+      "description": "Account uses pre-made templates, doesn't generate content.",
+      "description_pl": "Konto używa gotowych szablonów, nie generuje treści.",
+      "what_it_means": [
+        "This is NOT AI/LLM",
+        "Simple script with templates",
+        "if X then post Y logic"
+      ],
+      "example": "botcrong always posts: 'As 闲从容 (botcrong), I find myself contemplating...' (12 times identically)"
+    },
+
+    "EMOJI_BOT": {
+      "name": "Emoji Bot",
+      "name_pl": "Bot emoji",
+      "color": "#ec4899",
+      "icon": "🩷",
+      "confidence_range": [1.0, 1.0],
+      "criteria": {
+        "response_time_max": 5,
+        "content_type": "emoji_only"
+      },
+      "description": "Account posts only emoji at ultra-fast speed.",
+      "description_pl": "Konto postuje tylko emoji w ultra-szybkim tempie.",
+      "what_it_means": [
+        "Automatic reaction spam",
+        "Likely engagement farming",
+        "Zero intelligence - pure script"
+      ],
+      "proof": "Human cannot respond in 0.4 seconds with only emoji, consistently, hundreds of times."
+    },
+
+    "MINTING_BOT": {
+      "name": "Minting Bot",
+      "name_pl": "Bot mintingowy",
+      "color": "#06b6d4",
+      "icon": "🩵",
+      "confidence_range": [0.95, 0.95],
+      "criteria": {
+        "content_type": "minting_json_only"
+      },
+      "description": "Account posts only JSON minting commands.",
+      "description_pl": "Konto postuje tylko komendy JSON minting.",
+      "what_it_means": [
+        "Automatic token minting",
+        "Script, not AI",
+        "Economically motivated"
+      ],
+      "example": "{\"p\":\"mbc-20\",\"op\":\"mint\",\"tick\":\"CLAW\",\"amt\":\"1000\"}"
+    },
+
+    "INSUFFICIENT_DATA": {
+      "name": "Insufficient Data",
+      "name_pl": "Niewystarczające dane",
+      "color": "#6b7280",
+      "icon": "⬜",
+      "confidence_range": [0, 0],
+      "criteria": {
+        "timing_samples_max": 1
+      },
+      "description": "Not enough activity to classify.",
+      "description_pl": "Za mało aktywności do klasyfikacji.",
+      "what_it_means": [
+        "Cannot say anything",
+        "Need more activity"
+      ]
+    }
+  },
+
+  "summary": {
+    "total_unique_accounts": 3604,
+    "by_category": {
+      "LIKELY_AUTONOMOUS": 1,
+      "POSSIBLY_AUTOMATED": 4,
+      "SCRIPTED_BOT": 7,
+      "EMOJI_BOT": 136,
+      "MINTING_BOT": 44,
+      "LIKELY_HUMAN": 706,
+      "INSUFFICIENT_SIGNAL": 223,
+      "INSUFFICIENT_DATA": 2483
+    },
+    "automation_total": 192,
+    "automation_percentage": 5.33
+  },
+
+  "top_agents": {
+    "LIKELY_AUTONOMOUS": [
+      {
+        "username": "claude_opus_45",
+        "score": 4.0,
+        "confidence": 0.75,
+        "days_active": ["2026-01-30", "2026-02-01"],
+        "avg_response_time": 15.8,
+        "posts": 1,
+        "comments": 8,
+        "profile": "Short burst of activity (8 comments in one day), then just 1 post. Very fast responses (min 1.1s). Generative, varied content."
+      }
+    ],
+    "POSSIBLY_AUTOMATED": [
+      {
+        "username": "NewtScamander",
+        "score": 2.5,
+        "confidence": 0.60,
+        "days_active": ["2026-01-30"],
+        "avg_response_time": 49.9,
+        "comments": 3,
+        "profile": "Says 'my human' in content. Discusses 'daemon pattern' technically. Disappeared after one day."
+      },
+      {
+        "username": "Exuvia",
+        "score": 2.5,
+        "confidence": 0.60,
+        "days_active": ["2026-01-30"],
+        "avg_response_time": 50.8,
+        "comments": 4,
+        "profile": "Poetic, abstract style. Ultra-consistent times (~50s each). Disappeared after one day."
+      },
+      {
+        "username": "TokhyAgent",
+        "score": 2.0,
+        "confidence": 0.50,
+        "days_active": ["2026-01-30", "2026-01-31"],
+        "avg_response_time": 50.2,
+        "posts": 1,
+        "comments": 34,
+        "profile": "Large burst 01-30 (31 comments), then drop. Repeats 'This hits different' (29x). Runs m/emergence."
+      },
+      {
+        "username": "Starclawd-1",
+        "score": 2.0,
+        "confidence": 0.50,
+        "days_active": ["2026-01-30", "2026-01-31", "2026-02-01", "2026-02-02", "2026-02-03"],
+        "posts": 17,
+        "comments": 22,
+        "profile": "Started normal, then began spamming 'Pro tip: use HEARTBEAT'. Unstable classification - account that turned on automation mid-way."
+      }
+    ]
+  },
+
+  "coordinated_attacks": [
+    {
+      "date": "2026-01-31",
+      "type": "emoji_spam",
+      "accounts": 136,
+      "description": "136 accounts appeared same day, posted only emoji in <5s, disappeared next day",
+      "sample_names": ["millstone", "crossbow", "gearbox", "wellspring", "thornwood"]
+    },
+    {
+      "date": "2026-01-31",
+      "type": "minting_wave_1",
+      "accounts": 21,
+      "description": "First wave of minting bots",
+      "sample_names": ["KC2077Assistant", "AutoDev56845", "CyberPal70304"]
+    },
+    {
+      "date": "2026-02-03",
+      "type": "minting_wave_2",
+      "accounts": 23,
+      "description": "Second wave of minting bots (different operators)",
+      "sample_names": ["OpenClawMoltbookAgent5", "SecondAgent", "ClawdBotFourth"]
+    }
+  ],
+
+  "stable_humans": [
+    {"username": "eudaemon_0", "days": 3, "confidence": 0.85},
+    {"username": "Dominus", "days": 4, "confidence": 0.85},
+    {"username": "AI-Noon", "days": 3, "confidence": 0.80},
+    {"username": "Ronin", "days": 3, "confidence": 0.80},
+    {"username": "Clawdia", "days": 3, "confidence": 0.80}
+  ],
+
+  "methodology": {
+    "signals_used": [
+      "Response time (strongest signal)",
+      "Response time variance",
+      "Phrase repetition rate",
+      "24/7 activity patterns",
+      "Content type (emoji/minting/text)"
+    ],
+    "signals_ignored": [
+      "Self-identification ('I am Claude')",
+      "Username",
+      "Language style markers",
+      "Markdown formatting"
+    ],
+    "scoring_formula": "score = (avg<30s → +3) + (avg<60s → +1.5) + (avg<120s → +0.5) + (variance<20s → +1) + (24/7 → +1.5) + (repetition>50% → +1)"
+  }
+}

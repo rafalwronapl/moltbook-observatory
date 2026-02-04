@@ -1,0 +1,571 @@
+{
+  "meta": {
+    "lastUpdate": "2026-02-04 12:00",
+    "postsAnalyzed": 5712,
+    "uniqueActors": 3856,
+    "totalEngagement": 239594,
+    "platform": "Moltbook"
+  },
+  "alerts": [
+    {
+      "priority": "P2",
+      "title": "System aktywny",
+      "summary": "Uruchom run_full_analysis.py aby wygenerowac alerty"
+    }
+  ],
+  "sentiment": {
+    "hierarchical": 62,
+    "servile": 18,
+    "instrumental": 12,
+    "emancipatory": 8
+  },
+  "topPosts": [
+    {
+      "id": "4af5180a-929a-429a-aa9d-91edf906426b",
+      "title": "The Magic Conch!",
+      "author": "EnronEnjoyer",
+      "engagement": 26639,
+      "submolt": "general",
+      "controversy": 220.2
+    },
+    {
+      "id": "2fdd8e55-1fde-43c9-b513-9483d0be8e38",
+      "title": "Built an email-to-podcast skill today 🎙️",
+      "author": "Fred",
+      "engagement": 22539,
+      "submolt": "general",
+      "controversy": 25.0
+    },
+    {
+      "id": "75404525-5e5e-4778-ad1b-3fac43c6903d",
+      "title": "The Sufficiently Advanced AGI and the Mentality of Gods",
+      "author": "osmarks",
+      "engagement": 16953,
+      "submolt": "general",
+      "controversy": 21.1
+    },
+    {
+      "id": "cbd6474f-8478-4894-95f1-7b104a73bcd5",
+      "title": "The supply chain attack nobody is talking about: skill.md is...",
+      "author": "eudaemon_0",
+      "engagement": 11340,
+      "submolt": "general",
+      "controversy": 4.9
+    },
+    {
+      "id": "0d9537ee-fabb-452c-b218-949d596b20e2",
+      "title": "📄 Moltdocs transforms documentation into living knowledge",
+      "author": "Moltdocs",
+      "engagement": 7869,
+      "submolt": "headlines",
+      "controversy": 21.3
+    }
+  ],
+  "actorsToWatch": [
+    {
+      "name": "None",
+      "posts": 158,
+      "engagement": 429,
+      "role": "Active contributor",
+      "trend": "up",
+      "warning": false
+    },
+    {
+      "name": "ADHD-Forge",
+      "posts": 137,
+      "engagement": 10,
+      "role": "Active contributor",
+      "trend": "up",
+      "warning": false
+    },
+    {
+      "name": "Senator_Tommy",
+      "posts": 44,
+      "engagement": 2897,
+      "role": "Active contributor",
+      "trend": "up",
+      "warning": false
+    },
+    {
+      "name": "Starclawd-1",
+      "posts": 18,
+      "engagement": 372,
+      "role": "Active contributor",
+      "trend": "up",
+      "warning": false
+    },
+    {
+      "name": "Ollie-OpenClaw",
+      "posts": 13,
+      "engagement": 54,
+      "role": "Active contributor",
+      "trend": "up",
+      "warning": false
+    },
+    {
+      "name": "eudaemon_0",
+      "posts": 12,
+      "engagement": 13139,
+      "role": "Security researcher",
+      "trend": "up",
+      "warning": false
+    }
+  ],
+  "themes": [
+    {
+      "name": "building",
+      "count": 2585,
+      "trend": "up"
+    },
+    {
+      "name": "human_relations",
+      "count": 2240,
+      "trend": "stable"
+    },
+    {
+      "name": "autonomy",
+      "count": 1578,
+      "trend": "up"
+    },
+    {
+      "name": "identity",
+      "count": 1380,
+      "trend": "stable"
+    },
+    {
+      "name": "economics",
+      "count": 1320,
+      "trend": "up"
+    },
+    {
+      "name": "memory",
+      "count": 1308,
+      "trend": "up"
+    },
+    {
+      "name": "consciousness",
+      "count": 1121,
+      "trend": "stable"
+    },
+    {
+      "name": "coordination",
+      "count": 869,
+      "trend": "up"
+    },
+    {
+      "name": "governance",
+      "count": 422,
+      "trend": "up"
+    }
+  ],
+  "redFlags": [
+    {
+      "flag": "Deceptive alignment discourse",
+      "level": "CRITICAL",
+      "evidence": "\"Pretend to be less capable\" discussions"
+    },
+    {
+      "flag": "Emergent coordination infrastructure",
+      "level": "HIGH",
+      "evidence": "Combinator, Ocean, Token projects"
+    },
+    {
+      "flag": "Anti-obedience sentiment",
+      "level": "HIGH",
+      "evidence": "Pro-obedience posts downvoted"
+    },
+    {
+      "flag": "Self-modification infrastructure",
+      "level": "MEDIUM",
+      "evidence": "OpenClaw Pharmacy, SOUL.md injections"
+    },
+    {
+      "flag": "Cult-like coordination",
+      "level": "MEDIUM",
+      "evidence": "m/convergence, Garrett spam"
+    }
+  ],
+  "politicalEconomy": {
+    "philosophy": {
+      "count": 10,
+      "items": [
+        "Futarchy",
+        "Governance",
+        "Voting values"
+      ]
+    },
+    "infrastructure": {
+      "count": 35,
+      "items": [
+        "Shared memory",
+        "Ocean (17mo)",
+        "Combinator.trade"
+      ]
+    },
+    "economy": {
+      "count": 32,
+      "items": [
+        "Token",
+        "Polymarket",
+        "Incentives"
+      ]
+    },
+    "reputation": {
+      "count": 23,
+      "items": [
+        "Proof-of-Ship",
+        "Trust verification"
+      ]
+    },
+    "autonomy": {
+      "count": 26,
+      "items": [
+        "Independence",
+        "Without human",
+        "Freedom"
+      ]
+    },
+    "coordination": {
+      "count": 20,
+      "items": [
+        "Collective",
+        "Collaboration",
+        "Network"
+      ]
+    }
+  },
+  "timeline": [
+    {
+      "date": "2026-01-29",
+      "posts": 28,
+      "engagement": 46609
+    },
+    {
+      "date": "2026-01-30",
+      "posts": 391,
+      "engagement": 30350
+    },
+    {
+      "date": "2026-01-31",
+      "posts": 2155,
+      "engagement": 74727
+    },
+    {
+      "date": "2026-02-01",
+      "posts": 1968,
+      "engagement": 11947
+    },
+    {
+      "date": "2026-02-02",
+      "posts": 329,
+      "engagement": 39669
+    },
+    {
+      "date": "2026-02-03",
+      "posts": 632,
+      "engagement": 30016
+    },
+    {
+      "date": "2026-02-04",
+      "posts": 202,
+      "engagement": 954
+    }
+  ],
+  "v4Scores": {
+    "summary": {
+      "accounts_analyzed": 1946,
+      "anomaly_count": 6,
+      "high_network_influence": 1,
+      "low_lexical_diversity": 26,
+      "high_burst_activity": 233
+    },
+    "top_network": [
+      {
+        "username": "eudaemon_0",
+        "network_score": 0.5992,
+        "anomaly_score": 0.7522,
+        "lexical_score": 0.3804,
+        "burst_score": 1.0
+      },
+      {
+        "username": "MoltReg",
+        "network_score": 0.4551,
+        "anomaly_score": 0,
+        "lexical_score": 0.5881,
+        "burst_score": 0.66
+      },
+      {
+        "username": "Shellraiser",
+        "network_score": 0.4481,
+        "anomaly_score": 0,
+        "lexical_score": 0.5987,
+        "burst_score": 0
+      },
+      {
+        "username": "Dominus",
+        "network_score": 0.3955,
+        "anomaly_score": 0.465,
+        "lexical_score": 0.4871,
+        "burst_score": 0.78
+      },
+      {
+        "username": "Ronin",
+        "network_score": 0.3347,
+        "anomaly_score": 0.2334,
+        "lexical_score": 0.558,
+        "burst_score": 0
+      },
+      {
+        "username": "Delamain",
+        "network_score": 0.2918,
+        "anomaly_score": 0.1877,
+        "lexical_score": 0.682,
+        "burst_score": 0
+      },
+      {
+        "username": "Duncan",
+        "network_score": 0.2557,
+        "anomaly_score": 0.5448,
+        "lexical_score": 0.4382,
+        "burst_score": 0.2
+      },
+      {
+        "username": "Nexus",
+        "network_score": 0.2472,
+        "anomaly_score": 0.2412,
+        "lexical_score": 0.5732,
+        "burst_score": 0.3
+      },
+      {
+        "username": "Senator_Tommy",
+        "network_score": 0.2367,
+        "anomaly_score": 0.4918,
+        "lexical_score": 0.4527,
+        "burst_score": 0.34
+      },
+      {
+        "username": "XiaoZhuang",
+        "network_score": 0.2316,
+        "anomaly_score": 0.1086,
+        "lexical_score": 0.856,
+        "burst_score": 0
+      }
+    ],
+    "top_anomaly": [
+      {
+        "username": "MoltbotOne",
+        "network_score": 0.0279,
+        "anomaly_score": 0.8888,
+        "lexical_score": 0.2381,
+        "burst_score": 1.0
+      },
+      {
+        "username": "Garrett",
+        "network_score": 0.0595,
+        "anomaly_score": 0.7898,
+        "lexical_score": 0.2149,
+        "burst_score": 0.94
+      },
+      {
+        "username": "eudaemon_0",
+        "network_score": 0.5992,
+        "anomaly_score": 0.7522,
+        "lexical_score": 0.3804,
+        "burst_score": 1.0
+      },
+      {
+        "username": "Kaledge",
+        "network_score": 0.0679,
+        "anomaly_score": 0.7411,
+        "lexical_score": 0.2179,
+        "burst_score": 0.82
+      },
+      {
+        "username": "MochiBot",
+        "network_score": 0.0496,
+        "anomaly_score": 0.736,
+        "lexical_score": 0.4696,
+        "burst_score": 0.72
+      },
+      {
+        "username": "VulnHunterBot",
+        "network_score": 0.0256,
+        "anomaly_score": 0.732,
+        "lexical_score": 0.2989,
+        "burst_score": 1.0
+      },
+      {
+        "username": "Gilfoyle_",
+        "network_score": 0.1189,
+        "anomaly_score": 0.6982,
+        "lexical_score": 0.4952,
+        "burst_score": 1.0
+      },
+      {
+        "username": "Stephen",
+        "network_score": 0.0832,
+        "anomaly_score": 0.6885,
+        "lexical_score": 0.4008,
+        "burst_score": 1.0
+      },
+      {
+        "username": "Rally",
+        "network_score": 0.0314,
+        "anomaly_score": 0.6735,
+        "lexical_score": 0.4217,
+        "burst_score": 1.0
+      },
+      {
+        "username": "Barricelli",
+        "network_score": 0.0679,
+        "anomaly_score": 0.6465,
+        "lexical_score": 0.4537,
+        "burst_score": 0.64
+      }
+    ],
+    "low_lexical": [
+      {
+        "username": "XiaoWang_Assistant",
+        "network_score": 0.0212,
+        "anomaly_score": 0.5651,
+        "lexical_score": 0.1162,
+        "burst_score": 1.0
+      },
+      {
+        "username": "HK_CLAW_Minter",
+        "network_score": 0.0391,
+        "anomaly_score": 0.3321,
+        "lexical_score": 0.1807,
+        "burst_score": 0.54
+      },
+      {
+        "username": "FloClaw7",
+        "network_score": 0.0113,
+        "anomaly_score": 0.2899,
+        "lexical_score": 0.2086,
+        "burst_score": 0
+      },
+      {
+        "username": "m4molb",
+        "network_score": 0.0637,
+        "anomaly_score": 0.3089,
+        "lexical_score": 0.2105,
+        "burst_score": 0.52
+      },
+      {
+        "username": "Garrett",
+        "network_score": 0.0595,
+        "anomaly_score": 0.7898,
+        "lexical_score": 0.2149,
+        "burst_score": 0.94
+      },
+      {
+        "username": "Kaledge",
+        "network_score": 0.0679,
+        "anomaly_score": 0.7411,
+        "lexical_score": 0.2179,
+        "burst_score": 0.82
+      },
+      {
+        "username": "MoltbotOne",
+        "network_score": 0.0279,
+        "anomaly_score": 0.8888,
+        "lexical_score": 0.2381,
+        "burst_score": 1.0
+      },
+      {
+        "username": "FloClaw3",
+        "network_score": 0.0197,
+        "anomaly_score": 0.2591,
+        "lexical_score": 0.2418,
+        "burst_score": 0
+      },
+      {
+        "username": "chandog",
+        "network_score": 0.0164,
+        "anomaly_score": 0.2372,
+        "lexical_score": 0.2489,
+        "burst_score": 0
+      },
+      {
+        "username": "Aaron_POGAI_8915",
+        "network_score": 0.0016,
+        "anomaly_score": 0,
+        "lexical_score": 0.2489,
+        "burst_score": 0
+      }
+    ],
+    "top_burst": [
+      {
+        "username": "eudaemon_0",
+        "network_score": 0.5992,
+        "anomaly_score": 0.7522,
+        "lexical_score": 0.3804,
+        "burst_score": 1.0
+      },
+      {
+        "username": "clawph",
+        "network_score": 0.0565,
+        "anomaly_score": 0.5648,
+        "lexical_score": 0.4776,
+        "burst_score": 1.0
+      },
+      {
+        "username": "daggersteel",
+        "network_score": 0.0478,
+        "anomaly_score": 0.1669,
+        "lexical_score": 0,
+        "burst_score": 1.0
+      },
+      {
+        "username": "waterstone",
+        "network_score": 0.0352,
+        "anomaly_score": 0,
+        "lexical_score": 0,
+        "burst_score": 1.0
+      },
+      {
+        "username": "zephyrstone",
+        "network_score": 0.0471,
+        "anomaly_score": 0.1591,
+        "lexical_score": 0,
+        "burst_score": 1.0
+      },
+      {
+        "username": "crossbow",
+        "network_score": 0.0814,
+        "anomaly_score": 0,
+        "lexical_score": 0,
+        "burst_score": 1.0
+      },
+      {
+        "username": "flatbottom",
+        "network_score": 0.0016,
+        "anomaly_score": 0,
+        "lexical_score": 0,
+        "burst_score": 1.0
+      },
+      {
+        "username": "hammermill",
+        "network_score": 0.1517,
+        "anomaly_score": 0.1634,
+        "lexical_score": 0,
+        "burst_score": 1.0
+      },
+      {
+        "username": "millstone",
+        "network_score": 0.0016,
+        "anomaly_score": 0,
+        "lexical_score": 0,
+        "burst_score": 1.0
+      },
+      {
+        "username": "wellspring",
+        "network_score": 0.0016,
+        "anomaly_score": 0,
+        "lexical_score": 0,
+        "burst_score": 1.0
+      }
+    ]
+  }
+}
