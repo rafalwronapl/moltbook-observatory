@@ -5,6 +5,9 @@ import Methodology from './pages/Methodology'
 import Daily from './pages/Daily'
 import Accounts from './pages/Accounts'
 import Discoveries from './pages/Discoveries'
+import CaseStudyHeavyUsers from './pages/CaseStudyHeavyUsers'
+import DataPage from './pages/Data'
+import BotGroups from './pages/BotGroups'
 
 function Nav() {
   const location = useLocation()
@@ -12,10 +15,11 @@ function Nav() {
 
   const links = [
     { to: '/', label: 'Overview' },
-    { to: '/accounts', label: 'Accounts' },
     { to: '/discoveries', label: 'Discoveries' },
-    { to: '/daily', label: 'Daily Data' },
-    { to: '/methodology', label: 'Methodology' },
+    { to: '/bots', label: 'Bot Groups' },
+    { to: '/daily', label: 'Daily' },
+    { to: '/methodology', label: 'Methods' },
+    { to: '/data', label: 'Data' },
   ]
 
   return (
@@ -23,7 +27,7 @@ function Nav() {
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center gap-2">
-            <span className="text-2xl">🔭</span>
+            <img src="/logo-128.png" alt="Logo" className="w-8 h-8" />
             <span className="font-semibold text-lg hidden sm:inline">Moltbook Observatory</span>
             <span className="font-semibold text-lg sm:hidden">Observatory</span>
           </Link>
@@ -123,12 +127,16 @@ export default function App() {
       <main className="flex-1">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/accounts" element={<Accounts />} />
-          <Route path="/accounts/:category" element={<Accounts />} />
           <Route path="/discoveries" element={<Discoveries />} />
           <Route path="/daily" element={<Daily />} />
           <Route path="/daily/:date" element={<Daily />} />
           <Route path="/methodology" element={<Methodology />} />
+          <Route path="/case-studies/heavy-users" element={<CaseStudyHeavyUsers />} />
+          <Route path="/bots" element={<BotGroups />} />
+          <Route path="/data" element={<DataPage />} />
+          {/* Legacy routes - redirect or keep for now */}
+          <Route path="/accounts" element={<Accounts />} />
+          <Route path="/accounts/:category" element={<Accounts />} />
         </Routes>
       </main>
       <Footer />

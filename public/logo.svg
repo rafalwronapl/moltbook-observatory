@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="tubeGradB" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#60a5fa"/>
+      <stop offset="100%" style="stop-color:#1d4ed8"/>
+    </linearGradient>
+    
+    <linearGradient id="lensRingB" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#60a5fa"/>
+      <stop offset="100%" style="stop-color:#1e40af"/>
+    </linearGradient>
+    
+    <radialGradient id="lensGlowB" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#1e293b"/>
+      <stop offset="80%" style="stop-color:#0f172a"/>
+      <stop offset="100%" style="stop-color:#020617"/>
+    </radialGradient>
+    
+    <clipPath id="lensClipB">
+      <ellipse cx="74" cy="26" rx="10.5" ry="14.5" transform="rotate(-35 74 26)"/>
+    </clipPath>
+    
+    <!-- Glow dla aktywnych węzłów -->
+    <filter id="activeGlow">
+      <feGaussianBlur stdDeviation="1" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Tuba teleskopu z subtlenym 3D efektem -->
+  <rect x="26" y="35" width="46" height="16" rx="5" fill="url(#tubeGradB)" transform="rotate(-35 50 44)"/>
+  <rect x="28" y="36" width="42" height="4" rx="2" fill="#93c5fd" opacity="0.3" transform="rotate(-35 50 44)"/>
+  
+  <!-- Soczewka - pierścień zewnętrzny -->
+  <ellipse cx="74" cy="26" rx="13" ry="17" fill="none" stroke="#1e40af" stroke-width="1.5" transform="rotate(-35 74 26)"/>
+  <ellipse cx="74" cy="26" rx="11.5" ry="15.5" fill="none" stroke="url(#lensRingB)" stroke-width="2" transform="rotate(-35 74 26)"/>
+  
+  <!-- Soczewka - wnętrze -->
+  <ellipse cx="74" cy="26" rx="10.5" ry="14.5" fill="url(#lensGlowB)" transform="rotate(-35 74 26)"/>
+  
+  <!-- Sieć w soczewce -->
+  <g clip-path="url(#lensClipB)">
+    <!-- Połączenia drugoplanowe -->
+    <g opacity="0.4">
+      <line x1="65" y1="18" x2="72" y2="21" stroke="#3b82f6" stroke-width="0.6"/>
+      <line x1="82" y1="22" x2="78" y2="28" stroke="#3b82f6" stroke-width="0.6"/>
+      <line x1="67" y1="34" x2="73" y2="30" stroke="#3b82f6" stroke-width="0.6"/>
+    </g>
+    
+    <!-- Połączenia główne -->
+    <line x1="69" y1="20" x2="77" y2="18" stroke="#60a5fa" stroke-width="1.3" stroke-linecap="round"/>
+    <line x1="69" y1="20" x2="67" y2="28" stroke="#60a5fa" stroke-width="1.3" stroke-linecap="round"/>
+    <line x1="69" y1="20" x2="75" y2="25" stroke="#93c5fd" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="77" y1="18" x2="81" y2="24" stroke="#60a5fa" stroke-width="1.2" stroke-linecap="round"/>
+    <line x1="75" y1="25" x2="81" y2="24" stroke="#60a5fa" stroke-width="1.3" stroke-linecap="round"/>
+    <line x1="75" y1="25" x2="73" y2="32" stroke="#60a5fa" stroke-width="1.2" stroke-linecap="round"/>
+    <line x1="67" y1="28" x2="73" y2="32" stroke="#93c5fd" stroke-width="1" stroke-linecap="round"/>
+    <line x1="81" y1="24" x2="78" y2="31" stroke="#93c5fd" stroke-width="1" stroke-linecap="round"/>
+    <line x1="75" y1="25" x2="67" y2="28" stroke="#60a5fa" stroke-width="1.1" stroke-linecap="round"/>
+    
+    <!-- Węzły tła -->
+    <circle cx="65" cy="18" r="1" fill="#60a5fa" opacity="0.4"/>
+    <circle cx="82" cy="22" r="1" fill="#60a5fa" opacity="0.4"/>
+    <circle cx="67" cy="34" r="1" fill="#60a5fa" opacity="0.4"/>
+    
+    <!-- Węzły główne -->
+    <g filter="url(#activeGlow)">
+      <circle cx="69" cy="20" r="2.8" fill="#2563eb"/>
+      <circle cx="69" cy="20" r="1.6" fill="#60a5fa"/>
+      <circle cx="69" cy="20" r="0.6" fill="#ffffff"/>
+    </g>
+    
+    <circle cx="77" cy="18" r="2.2" fill="#3b82f6"/>
+    <circle cx="77" cy="18" r="1.2" fill="#93c5fd"/>
+    
+    <circle cx="67" cy="28" r="2" fill="#3b82f6"/>
+    <circle cx="67" cy="28" r="1" fill="#93c5fd"/>
+    
+    <!-- Węzeł centralny - główny focus -->
+    <g filter="url(#activeGlow)">
+      <circle cx="75" cy="25" r="3.5" fill="#1d4ed8"/>
+      <circle cx="75" cy="25" r="2.3" fill="#3b82f6"/>
+      <circle cx="75" cy="25" r="1.2" fill="#93c5fd"/>
+      <circle cx="75" cy="25" r="0.5" fill="#ffffff"/>
+    </g>
+    
+    <circle cx="81" cy="24" r="2" fill="#3b82f6"/>
+    <circle cx="81" cy="24" r="1" fill="#93c5fd"/>
+    
+    <circle cx="73" cy="32" r="1.8" fill="#60a5fa"/>
+    <circle cx="73" cy="32" r="0.9" fill="#bfdbfe"/>
+    
+    <circle cx="78" cy="31" r="1.5" fill="#60a5fa"/>
+    <circle cx="78" cy="31" r="0.7" fill="#bfdbfe"/>
+  </g>
+  
+  <!-- Odblask soczewki -->
+  <ellipse cx="69" cy="20" rx="4" ry="6" fill="#ffffff" opacity="0.05" transform="rotate(-35 69 20)"/>
+  
+  <!-- Okular -->
+  <rect x="17" y="52" width="11" height="9" rx="2.5" fill="#1d4ed8" transform="rotate(-35 23 57)"/>
+  <rect x="18" y="53" width="9" height="3" rx="1.5" fill="#2563eb" transform="rotate(-35 23 57)"/>
+  
+  <!-- Statyw -->
+  <g stroke="#475569" stroke-width="3.5" stroke-linecap="round">
+    <line x1="50" y1="55" x2="30" y2="90"/>
+    <line x1="50" y1="55" x2="70" y2="90"/>
+    <line x1="50" y1="55" x2="50" y2="92"/>
+  </g>
+  
+  <!-- Mocowanie -->
+  <circle cx="50" cy="55" r="5.5" fill="#334155"/>
+  <circle cx="50" cy="55" r="3.5" fill="#475569"/>
+  <circle cx="50" cy="55" r="1.8" fill="#64748b"/>
+</svg>

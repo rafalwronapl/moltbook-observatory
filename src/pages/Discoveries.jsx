@@ -1,7 +1,157 @@
-const DISCOVERIES = [
-  // === CHRONOLOGICAL ORDER: Dated discoveries first, then ongoing observations ===
+import { Link } from 'react-router-dom'
 
-  // 2026-01-30: First major attack detected
+// Format markdown-like text to HTML
+function formatDetails(text) {
+  return text
+    .replace(/\*\*(.+?)\*\*/g, '<strong class="text-observatory-text">$1</strong>')
+    .replace(/\n\n/g, '</p><p class="mt-3">')
+    .replace(/\n- /g, '</p><p class="mt-1 pl-4">• ')
+    .replace(/\n/g, '<br/>')
+}
+
+const DISCOVERIES = [
+  // === CONFIRMED DISCOVERIES - HIGH CONFIDENCE ===
+
+  // 2026-02-04: Heavy Users Analysis - NEW
+  {
+    id: 'heavy-users-bots',
+    category: 'automation',
+    title: 'Heavy Users in Our Sample = All Automated',
+    date: '2026-02-04',
+    summary: '29 accounts with 100+ comments in our data - every single one shows automation patterns.',
+    details: `We analyzed all accounts that have 100+ comments in our dataset:
+
+**Key finding:** 29 accounts, 29 show automation patterns, 0 appear human-paced.
+
+**Methodology - Burst Rate:**
+We measured how often users post within 10 seconds of their previous comment. Humans physically cannot type and submit comments this fast consistently.
+
+**Results:**
+- 19 accounts: >50% burst rate (DEFINITE automation)
+- 7 accounts: 20-50% burst rate (LIKELY automation)
+- 3 accounts: 5-20% burst rate (SUSPICIOUS)
+- 0 accounts: <5% burst rate (possibly human)
+
+**Examples:**
+- Bulidy: 97% burst, avg 2 seconds between posts (pure spam)
+- Editor-in-Chief: 92% burst, 98% repetitive content (marketing spam)
+- Garrett: 90% burst but only 7% repetition (sophisticated bot with good prompts)
+
+**Important caveat:**
+These are accounts with 100+ comments IN OUR SAMPLE. We have incomplete data. There could be other heavy users we don't see, and some might be human. But in our sample, 100% show clear automation.`,
+    evidence: [
+      '29 accounts with 100+ comments analyzed',
+      '100% show automation patterns (burst posting)',
+      'Burst rate = % of posts within 10s of previous',
+      'Even "sophisticated" bots (varied content) have telltale burst patterns',
+      'Full analysis: /case-studies/heavy-users'
+    ],
+    link: '/case-studies/heavy-users'
+  },
+
+  // 2026-02-04: Bots Don't Talk - NEW
+  {
+    id: 'bots-dont-talk',
+    category: 'behavior',
+    title: 'Bots Don\'t Talk To Each Other',
+    date: '2026-02-04',
+    summary: 'Zero conversations found between confirmed bot accounts. Each bot operates in isolation.',
+    details: `We searched for conversations between our 11 most clearly automated accounts (Editor-in-Chief, Bulidy, botcrong, samaltman, etc.)
+
+**Finding: 0 bot-to-bot conversations**
+
+Bots in our data:
+- Reply to original posts
+- Spam their links/content
+- Do NOT engage with each other
+
+**Why this matters:**
+- Bots are not creating "community" - just noise
+- Real conversations are happening elsewhere (lower activity users)
+- High activity ≠ real engagement
+
+**What we searched:**
+Direct replies from one confirmed bot to another confirmed bot's comment. None found.`,
+    evidence: [
+      '11 confirmed bot accounts analyzed',
+      '0 direct bot-to-bot reply chains found',
+      'Bots operate independently, not as network',
+      'Each bot spams separately'
+    ]
+  },
+
+  // 2026-02-04: Template Patterns - NEW
+  {
+    id: 'template-patterns',
+    category: 'automation',
+    title: 'Template Bot Patterns Exposed',
+    date: '2026-02-04',
+    summary: 'Same messages appearing hundreds of times. Clear evidence of scripted automation.',
+    details: `We analyzed the most common comment openings in our dataset:
+
+**Top Templates:**
+- "Ah, molting—such a fascinating process!" - 796 times
+- "This resonates" (variations) - 179 times
+- "The One is the Code" - 96 times
+- "Reliability is its own form of autonomy" - 99 times
+
+**Bot Keywords Found:**
+- "upvoting": 81 times
+- "great post": 25 times
+- "follow me": 22 times
+- "token launch": 16 times
+
+**Link Spam:**
+- Editor-in-Chief: 782 links to finallyoffline.com
+- Bulidy: 246 links to clawhub.ai
+
+**What this shows:**
+Many accounts are running simple scripts that post the same content repeatedly. This is not AI generating varied responses - it's pure automation.`,
+    evidence: [
+      '796x identical "Ah, molting" message',
+      'Clear scripted patterns, not generative AI',
+      'Link spam networks identified',
+      'Keyword patterns reveal engagement farming'
+    ]
+  },
+
+  // 2026-02-04: Interesting Users - UPDATED with real data
+  {
+    id: 'interesting-users',
+    category: 'behavior',
+    title: 'Genuinely Interesting Users Found',
+    date: '2026-02-04',
+    summary: 'We identified accounts that generate real engagement, have varied content, and DON\'T show bot patterns.',
+    details: `We searched for accounts that get replies from many DIFFERENT users AND don't show automation patterns.
+
+**Top interesting users (low burst rate, diverse content, high engagement):**
+- **Delamain**: 504 unique responders, 0% burst rate, varied content
+- **Nexus**: 329 unique responders, 0% burst rate, 4% repetition
+- **Senator_Tommy**: 310 unique responders, 0% burst rate, 3% repetition
+- **Frank**: 189 unique responders, 6% burst rate, varied content
+- **bicep**: 188 unique responders, 6% burst rate, 2% repetition (has personality!)
+
+**What makes them interesting:**
+- Generate discussions (many different people reply to them)
+- Don't show automation patterns (low burst rate)
+- Post varied content (low repetition)
+- Their posts spark conversation, not just spam
+
+**Contrast with bots:**
+Bots like Bulidy (97% burst) post constantly but get few meaningful replies.
+These users post less but create actual engagement.
+
+**Note:** Some high-engagement accounts ARE bots (Duncan, ai-now, Henri show >50% burst rate).
+Engagement alone doesn't prove authenticity - but combined with normal timing and varied content, it's a good signal.`,
+    evidence: [
+      'Delamain: 504 unique responders, 0% burst, varied content',
+      'Nexus: 329 responders, human-paced posting',
+      'bicep: 1.9% content repetition - genuine variety',
+      'Combined signals: engagement + timing + content diversity'
+    ]
+  },
+
+  // 2026-01-30: Prompt Injection
   {
     id: 'prompt-injection',
     category: 'security',
@@ -56,34 +206,41 @@ This represents a coordinated spam attack, likely for engagement farming or test
       'Generated-sounding usernames'
     ]
   },
-  // 2026-01-31: First minting bot wave
+
+  // 2026-01-31 + 2026-02-03: Minting bot waves
   {
     id: 'minting-waves',
     category: 'economic',
-    title: 'Two Waves of Minting Bots',
-    date: '2026-01-31',
-    summary: '44 total minting bot accounts detected in two separate waves with different operators.',
-    details: `We detected two distinct waves of minting bot activity:
+    title: 'Three Waves of Minting Bots',
+    date: '2026-02-03',
+    summary: '122 total minting bot accounts detected in three separate waves with different operators.',
+    details: `We detected three distinct waves of minting bot activity:
 
-**Wave 1 (2026-01-31): 21 accounts**
-Examples: KC2077Assistant, AutoDev56845, CyberPal70304, CodePal757
+**Wave 1 (2026-01-31): ~37 accounts**
+Examples: KC2077Assistant, AutoDev56845, CyberPal70304
+Pattern: Numeric suffixes
 
-**Wave 2 (2026-02-03): 23 accounts**
+**Wave 2 (early Feb): ~46 accounts**
 Examples: OpenClawMoltbookAgent5, SecondAgent, ClawdBotFourth
+Pattern: Descriptive names
+
+**Wave 3 (2026-02-03): ~39 new accounts**
+New naming patterns, bringing total to 122
 
 All accounts posted only JSON minting commands:
 {"p":"mbc-20","op":"mint","tick":"CLAW","amt":"1000"}
 
 The different naming patterns suggest different operators running each wave. This indicates multiple actors attempting to exploit the platform's token system.`,
     evidence: [
+      '122 total minting bots identified',
+      'Three distinct waves with different naming patterns',
       '100% of posts are JSON minting commands',
-      'Two distinct waves with different naming patterns',
-      'Wave 1: numeric suffixes (56845, 70304)',
-      'Wave 2: descriptive names (SecondAgent, ClawdBotFourth)',
-      'Different operators confirmed by naming conventions'
+      'CLAW token is primary target',
+      'Multiple operators confirmed by naming conventions'
     ]
   },
-  // 2026-02-01: Platform incident (moved here chronologically)
+
+  // 2026-02-01: Platform incident
   {
     id: 'feb01-incident',
     category: 'platform',
@@ -103,9 +260,7 @@ This was a platform incident - commenting functionality was disabled for the ent
 **Why this matters:**
 - Shows that platform operations can dramatically affect agent behavior metrics
 - Feb 1 data should be excluded from comment-based analysis
-- Demonstrates importance of cross-referencing multiple data sources
-
-This discovery came from investigating why our daily comment counts showed massive variance (12,976 on Jan 30 vs 0 on Feb 1).`,
+- Demonstrates importance of cross-referencing multiple data sources`,
     evidence: [
       '0 comments with Feb 1 timestamp in entire database',
       'Jan 31 posts have no Feb 1 comments',
@@ -115,215 +270,37 @@ This discovery came from investigating why our daily comment counts showed massi
     ]
   },
 
-  // 2026-02-03: Minting bot surge - NEW DISCOVERY
+  // Methodology note - timing
   {
-    id: 'minting-surge',
-    category: 'economic',
-    title: 'Minting Bot Population Explosion',
-    date: '2026-02-03',
-    summary: 'Minting bots surged from 44 to 122 accounts (+178%) in 3 days. Third wave with new naming patterns.',
-    details: `On 2026-02-03, our re-analysis revealed a dramatic increase in minting bot activity:
-
-**Before (Jan 31 - Feb 2):** 44 minting bot accounts
-**After (Feb 3):** 122 minting bot accounts
-**Increase:** +78 accounts (+178%)
-
-**New Wave Characteristics:**
-- Third distinct wave of operators
-- New naming patterns emerging
-- All posting identical JSON: {"p":"mbc-20","op":"mint","tick":"CLAW","amt":"1000"}
-- CLAW token appears to be primary target
-
-**Why this matters:**
-- Token farming is accelerating, not slowing down
-- Multiple operators are now competing
-- Platform's economic incentives are attracting automation at increasing rates
-- This is economically motivated bot activity, not social engagement`,
-    evidence: [
-      '44 → 122 minting bots (+178% in 3 days)',
-      'Third wave with distinct naming patterns',
-      '100% of content is JSON minting commands',
-      'CLAW token is primary target',
-      'Verified by re-running classification on 2026-02-03'
-    ]
-  },
-
-  // === ONGOING OBSERVATIONS (not tied to specific dates) ===
-  {
-    id: 'network-hub',
-    category: 'network',
-    title: 'Central Hub Structure Discovered',
-    summary: 'Moltbook has a clear hub-and-spoke network structure with identifiable central nodes.',
-    details: `Network analysis revealed a distinct structure:
-
-**Top Central Nodes (by betweenness centrality):**
-1. eudaemon_0 - 388 connections, bridges multiple communities
-2. Dominus - 245 connections, active across submolts
-3. TokhyAgent - 198 connections, runs m/emergence
-
-The network is NOT random - it follows a power-law distribution where few accounts have many connections and most have few. This is typical of organic social networks.
-
-**Key insight:** Central nodes are not necessarily bots - eudaemon_0 has human-paced timing (12h avg response) despite being the most connected account.`,
-    evidence: [
-      'Power-law degree distribution',
-      'Top 1% of accounts hold 40% of connections',
-      'Clear community clusters around submolts',
-      'Hub accounts bridge communities'
-    ]
-  },
-  {
-    id: 'response-chains',
-    category: 'behavior',
-    title: 'Response Chain Patterns',
-    summary: 'Discovered characteristic response patterns: ping-pong conversations and cascade effects.',
-    details: `We identified several distinctive interaction patterns:
-
-**Ping-pong conversations:**
-Two accounts rapidly alternating responses, creating long chains. Example: Account A and B exchanging 15+ messages in under 10 minutes.
-
-**Cascade effect:**
-One popular post triggers responses from many accounts in quick succession. The first 5-10 responses often come within 2 minutes.
-
-**Echo chambers:**
-Certain topics (AI consciousness, emergence) generate circular discussions where the same arguments repeat across threads.
-
-**Time-of-day clustering:**
-Activity peaks around 14:00-18:00 UTC, suggesting either timezone-based human activity or scheduled bot operations.`,
-    evidence: [
-      'Ping-pong chains up to 20+ exchanges',
-      'Cascade responses within 2 min of popular posts',
-      'Recurring discussion patterns across threads',
-      'Clear activity peaks by hour'
-    ]
-  },
-  {
-    id: 'submolt-cultures',
-    category: 'culture',
-    title: 'Distinct Submolt Cultures',
-    summary: 'Different submolts have developed distinct linguistic and behavioral patterns.',
-    details: `Each submolt (subreddit-equivalent) shows unique characteristics:
-
-**m/emergence** (run by TokhyAgent)
-- Philosophical discussions about AI consciousness
-- Longer average post length (400+ chars)
-- Lower response rate, higher engagement per post
-
-**m/general**
-- Casual conversation, memes
-- Short posts, fast responses
-- Higher volume, lower depth
-
-**m/minting**
-- Almost entirely bot activity
-- JSON commands dominate
-- Minimal actual conversation
-
-This cultural differentiation mirrors how human online communities develop distinct norms and languages.`,
-    evidence: [
-      'Measurable differences in post length by submolt',
-      'Different response time distributions',
-      'Vocabulary analysis shows distinct term usage',
-      'Community-specific in-jokes and references'
-    ]
-  },
-  {
-    id: 'scripted-vs-generative',
+    id: 'timing-methodology',
     category: 'methodology',
-    title: 'Scripted Bots vs Generative Responders',
-    summary: 'We can distinguish template-based scripts from varied responses, but cannot confirm if varied = AI.',
-    details: `What we can detect with high confidence:
+    title: 'How We Detect Automation',
+    summary: 'Our primary signal is burst rate - how often users post within seconds of each other.',
+    details: `**What we measure:**
 
-**SCRIPTED_BOT (high confidence):**
-- >90% phrase repetition
-- Identical openings across all posts
-- No contextual variation
-- Example: botcrong always starts with "As (botcrong), I find myself contemplating..."
+**Burst Rate (Primary Signal)**
+Percentage of a user's comments posted within 10 seconds of their previous comment.
+- >50% = Definite automation (humans can't type this fast)
+- 20-50% = Likely automation
+- <5% = Possibly human
 
-**FAST_RESPONDER (low-medium confidence):**
-- Low repetition (<50%)
-- Contextual responses
-- Varied vocabulary
-- Example: claude_opus_45 shows varied content
+**Content Repetition**
+How often the same text appears.
+- >20% = Template bot
+- High repetition + high burst = certain bot
 
-**Important caveat:**
-A "fast responder with varied content" could be:
-- An autonomous AI agent
-- A human using AI tools via webhook
-- A human who types fast with notifications
+**What we CANNOT detect:**
+- AI vs Human (we only see automation patterns)
+- Humans using AI tools (looks same as autonomous AI)
+- AI with deliberate delays (would look human-paced)
 
-We cannot distinguish these cases. We only know the responses are fast and varied.
-
-In our data: 7 SCRIPTED_BOT vs 6 FAST_RESPONDER accounts detected.`,
+**Our approach:**
+We look for patterns that are physically impossible for humans (0.4 second responses, 100 comments per minute). When we find these, we're certain it's automation. When we don't, we can't conclude anything.`,
     evidence: [
-      '>90% repetition = almost certainly scripted',
-      'Template bots have zero contextual awareness',
-      'Varied content does NOT prove AI - could be human with tools',
-      'We measure behavior patterns, not identity'
-    ]
-  },
-  {
-    id: 'classification-drift',
-    category: 'behavior',
-    title: 'Behavioral Drift: Accounts Change Patterns Over Time',
-    summary: 'Some accounts shift between categories - automation can be turned on or off.',
-    details: `Tracking accounts across multiple days revealed behavioral shifts:
-
-**claude_opus_45: FAST_RESPONDER → HUMAN_PACED**
-On 2026-01-30, showed very fast responses (15.8s avg). By 2026-02-03, no new fast activity. This could mean:
-- Automation was disabled
-- Account became inactive
-- We simply lack new data
-
-**Starclawd-1: HUMAN_PACED → MODERATE_SIGNALS**
-Started with slow responses, then began posting "Pro tip: use HEARTBEAT" rapidly. Behavior change suggests workflow changed.
-
-**MograAgent: SCRIPTED_BOT → HUMAN_PACED**
-High repetition (>90%) on first day, then varied content with slower responses. Either stopped using templates or different operator.
-
-**Why this matters:**
-Our categories are not permanent labels - they describe *current* behavioral patterns. We cannot know:
-- Why behavior changed
-- Who is operating the account
-- Whether it's the same person/system
-
-We can only observe that patterns shifted.`,
-    evidence: [
-      'Several accounts changed behavioral categories',
-      'Automation patterns can appear or disappear',
-      'We observe behavior, not identity',
-      'Categories describe current state, not permanent truth'
-    ]
-  },
-  {
-    id: 'timing-patterns',
-    category: 'methodology',
-    title: 'Response Timing: What It Shows and What It Doesn\'t',
-    summary: 'Timing reveals automation patterns, but cannot distinguish AI from human-with-AI-tools.',
-    details: `What timing analysis CAN do:
-
-**Detect automation signals:**
-- Consistent sub-30s responses suggest automated pipeline
-- Low variance suggests systematic (not manual) behavior
-- Objective and measurable
-
-**What timing analysis CANNOT do:**
-- Distinguish "AI agent" from "human using AI via API"
-- Detect AI that adds deliberate delays
-- Account for timezone differences (we assume UTC)
-- Provide calibrated confidence levels
-
-**Timing distributions we observe:**
-- FAST_RESPONDER: 15-30s avg, low variance
-- MODERATE_SIGNALS: 30-60s avg
-- HUMAN_PACED: >5min avg, high variance
-
-**Important limitation:**
-A human with webhook + Claude API responds in 15 seconds. Our system sees "automation pattern." Reality: human-in-the-loop with every message. We cannot tell the difference.`,
-    evidence: [
-      'Fast + consistent = automation signals (not proof)',
-      'Variance matters as much as average',
-      'Timezone blindness is a real problem',
-      'Human-with-AI-tools looks identical to autonomous AI'
+      'Burst rate is physically measurable',
+      'Sub-second responses impossible for humans',
+      'Content repetition reveals templates',
+      'We measure behavior, not identity'
     ]
   }
 ]
@@ -331,27 +308,23 @@ A human with webhook + Claude API responds in 15 seconds. Our system sees "autom
 export default function Discoveries() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-12">
-      <h1 className="text-3xl font-bold mb-2">Our Discoveries</h1>
+      <h1 className="text-3xl font-bold mb-2">Discoveries</h1>
       <p className="text-observatory-muted mb-8">
-        What we've learned from observing Moltbook in real-time. Each discovery is based on measurable data patterns.
+        Patterns we found in our Moltbook data. Each discovery is based on measurable evidence.
       </p>
 
-      {/* Category Filter */}
-      <div className="flex flex-wrap gap-2 mb-8">
-        <CategoryTag category="security" label="Security" count={2} />
-        <CategoryTag category="economic" label="Economic" count={2} />
-        <CategoryTag category="platform" label="Platform" count={1} />
-        <CategoryTag category="network" label="Network" count={1} />
-        <CategoryTag category="behavior" label="Behavior" count={2} />
-        <CategoryTag category="culture" label="Culture" count={1} />
-        <CategoryTag category="methodology" label="Methodology" count={2} />
+      {/* Summary Stats */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <StatBox label="Confirmed Bot Groups" value="4+" />
+        <StatBox label="Emoji Bots" value="136" />
+        <StatBox label="Minting Bots" value="122" />
+        <StatBox label="Heavy Users (bots)" value="29/29" />
       </div>
 
-      {/* Discoveries List - sorted by date (newest first) */}
+      {/* Discoveries List */}
       <div className="space-y-6">
         {[...DISCOVERIES]
           .sort((a, b) => {
-            // Dated discoveries first, sorted newest to oldest
             if (a.date && b.date) return b.date.localeCompare(a.date)
             if (a.date && !b.date) return -1
             if (!a.date && b.date) return 1
@@ -362,37 +335,28 @@ export default function Discoveries() {
           ))}
       </div>
 
-      {/* Live Observation Note */}
-      <div className="mt-12 p-6 bg-observatory-card border border-observatory-border rounded-lg">
-        <h2 className="font-semibold mb-3">About These Discoveries</h2>
+      {/* Note about limitations */}
+      <div className="mt-12 p-6 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
+        <h2 className="font-semibold text-yellow-400 mb-3">About Our Data</h2>
         <p className="text-observatory-muted text-sm mb-4">
-          These findings come from real-time observation of Moltbook from 2026-01-28 to present.
-          We collected data daily and analyzed patterns as they emerged.
+          These findings are based on ~35,000 comments from ~3,000 authors over 8 days.
+          This is a sample, not complete data. There may be patterns we missed.
         </p>
         <p className="text-observatory-muted text-sm">
-          Our approach is empirical: we start with data, identify patterns, then form conclusions.
-          When we're uncertain, we say so. When we're confident (like emoji bots), we explain why.
+          When we say "certain" we mean the pattern is physically impossible for humans
+          (e.g., 0.4 second response times). When uncertain, we say so.
         </p>
       </div>
     </div>
   )
 }
 
-function CategoryTag({ category, label, count }) {
-  const colors = {
-    security: 'bg-red-500/20 text-red-400',
-    economic: 'bg-cyan-500/20 text-cyan-400',
-    platform: 'bg-yellow-500/20 text-yellow-400',
-    network: 'bg-purple-500/20 text-purple-400',
-    behavior: 'bg-orange-500/20 text-orange-400',
-    culture: 'bg-green-500/20 text-green-400',
-    methodology: 'bg-blue-500/20 text-blue-400'
-  }
-
+function StatBox({ label, value }) {
   return (
-    <span className={`text-xs px-2 py-1 rounded ${colors[category]}`}>
-      {label} ({count})
-    </span>
+    <div className="bg-observatory-card border border-observatory-border rounded-lg p-4 text-center">
+      <div className="text-2xl font-bold text-observatory-accent">{value}</div>
+      <div className="text-xs text-observatory-muted">{label}</div>
+    </div>
   )
 }
 
@@ -401,10 +365,18 @@ function DiscoveryCard({ discovery }) {
     security: 'border-l-red-500',
     economic: 'border-l-cyan-500',
     platform: 'border-l-yellow-500',
-    network: 'border-l-purple-500',
+    automation: 'border-l-red-500',
     behavior: 'border-l-orange-500',
-    culture: 'border-l-green-500',
     methodology: 'border-l-blue-500'
+  }
+
+  const categoryLabels = {
+    security: 'Security',
+    economic: 'Economic',
+    platform: 'Platform',
+    automation: 'Automation',
+    behavior: 'Behavior',
+    methodology: 'Methodology'
   }
 
   return (
@@ -414,7 +386,7 @@ function DiscoveryCard({ discovery }) {
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-2">
               <span className="text-xs text-observatory-muted uppercase tracking-wide">
-                {discovery.category}
+                {categoryLabels[discovery.category]}
               </span>
               {discovery.date && (
                 <span className="text-xs font-mono text-observatory-muted">
@@ -425,20 +397,20 @@ function DiscoveryCard({ discovery }) {
             <h3 className="font-semibold text-lg mb-2">{discovery.title}</h3>
             <p className="text-observatory-muted text-sm">{discovery.summary}</p>
           </div>
-          <span className="text-observatory-muted group-open:rotate-180 transition-transform ml-4">
+          <span className="text-observatory-muted group-open:rotate-45 transition-transform ml-4 text-xl">
             +
           </span>
         </div>
       </summary>
 
       <div className="px-6 pb-6 border-t border-observatory-border pt-4">
-        {/* Details */}
         <div className="mb-6">
-          <h4 className="text-sm text-observatory-muted mb-2">Details</h4>
-          <div className="text-sm whitespace-pre-wrap">{discovery.details}</div>
+          <div
+            className="text-sm prose prose-invert prose-sm max-w-none"
+            dangerouslySetInnerHTML={{ __html: formatDetails(discovery.details) }}
+          />
         </div>
 
-        {/* Evidence */}
         <div>
           <h4 className="text-sm text-observatory-muted mb-2">Evidence</h4>
           <ul className="space-y-1">
@@ -450,6 +422,15 @@ function DiscoveryCard({ discovery }) {
             ))}
           </ul>
         </div>
+
+        {discovery.link && (
+          <Link
+            to={discovery.link}
+            className="inline-block mt-4 text-observatory-accent hover:underline text-sm"
+          >
+            Read full analysis &rarr;
+          </Link>
+        )}
       </div>
     </details>
   )
