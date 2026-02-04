@@ -20,7 +20,7 @@ const STATS = {
   days: DAILY_STATS.length,
   totalPosts: DAILY_STATS.reduce((sum, d) => sum + d.posts, 0),
   totalComments: DAILY_STATS.reduce((sum, d) => sum + d.comments, 0),
-  uniqueAccounts: 3856,
+  uniqueAccounts: 3886,
 }
 
 export default function Home() {
