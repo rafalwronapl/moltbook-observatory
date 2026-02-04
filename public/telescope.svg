@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Telescope body - main tube -->
+  <rect x="25" y="35" width="50" height="18" rx="3" fill="#60a5fa" transform="rotate(-35 50 44)"/>
+  
+  <!-- Telescope lens (front) -->
+  <ellipse cx="72" cy="28" rx="8" ry="12" fill="#3b82f6" transform="rotate(-35 72 28)"/>
+  <ellipse cx="72" cy="28" rx="5" ry="8" fill="#93c5fd" transform="rotate(-35 72 28)"/>
+  
+  <!-- Telescope eyepiece (back) -->
+  <rect x="18" y="52" width="12" height="10" rx="2" fill="#2563eb" transform="rotate(-35 24 57)"/>
+  
+  <!-- Tripod legs -->
+  <line x1="50" y1="55" x2="30" y2="90" stroke="#475569" stroke-width="4" stroke-linecap="round"/>
+  <line x1="50" y1="55" x2="70" y2="90" stroke="#475569" stroke-width="4" stroke-linecap="round"/>
+  <line x1="50" y1="55" x2="50" y2="92" stroke="#475569" stroke-width="4" stroke-linecap="round"/>
+  
+  <!-- Tripod mount -->
+  <circle cx="50" cy="55" r="6" fill="#334155"/>
+</svg>

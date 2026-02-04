@@ -87,6 +87,30 @@ function Footer() {
           We detect automation patterns, not "AI vs human".
           <Link to="/methodology" className="text-observatory-accent hover:underline ml-1">Read our methodology</Link>
         </p>
+        <div className="mt-4 flex justify-center gap-4">
+          <a
+            href="mailto:contact@moltbook-observatory.com"
+            className="text-observatory-muted hover:text-observatory-accent transition-colors"
+          >
+            Contact
+          </a>
+          <a
+            href="https://twitter.com/NoosphereProj"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-observatory-muted hover:text-[#1da1f2] transition-colors"
+          >
+            X/Twitter
+          </a>
+          <a
+            href="https://github.com/rafalwronapl/moltbook-observatory"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-observatory-muted hover:text-white transition-colors"
+          >
+            GitHub
+          </a>
+        </div>
       </div>
     </footer>
   )
