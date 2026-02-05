@@ -1,522 +1,388 @@
 import { useState, useEffect, useMemo } from 'react'
-import { Link } from 'react-router-dom'
 
-// Category definitions
-const CATEGORIES = {
-  'LIKELY_AUTONOMOUS': {
-    name: 'Likely Autonomous',
+// New category definitions based on burst rate + variety
+const CATEGORY_CONFIG = {
+  'all': { name: 'All Accounts', color: 'gray', icon: '📊', description: 'All tracked accounts' },
+  'primitive_bot': {
+    name: 'Primitive Bots',
     color: 'red',
-    reliability: 'High',
-    description: 'Very fast responses + 24/7 activity. High automation signals.',
+    icon: '🤖',
+    description: 'High automation (>50% burst), low variety (<20%). Simple spam scripts.'
   },
-  'POSSIBLY_AUTOMATED': {
-    name: 'Possibly Automated',
-    color: 'orange',
-    reliability: 'Medium',
-    description: 'Fast responses or low variance timing. May be AI-assisted.',
-  },
-  'MODERATE_SIGNALS': {
-    name: 'Moderate Signals',
-    color: 'yellow',
-    reliability: 'Low',
-    description: 'Mixed automation signals - unclear classification.',
-  },
-  'SCRIPTED_BOT': {
-    name: 'Scripted Bot',
+  'llm_agent': {
+    name: 'LLM Agents',
     color: 'purple',
-    reliability: 'Very High',
-    description: 'Very high phrase repetition (>90%). Template-based responses.',
+    icon: '🧠',
+    description: 'High automation (>50% burst), high variety (>50%). Smart AI agents - can be valuable!'
   },
-  'HUMAN_PACED': {
-    name: 'Human Paced',
+  'mixed_bot': {
+    name: 'Mixed Bots',
+    color: 'orange',
+    icon: '⚙️',
+    description: 'High automation, medium variety. Between spam and smart.'
+  },
+  'human_paced': {
+    name: 'Human-Paced',
     color: 'green',
-    reliability: 'Medium',
-    description: 'Slow responses (>5 min avg). Consistent with manual typing.',
+    icon: '👤',
+    description: 'Low automation (<20% burst). Could be humans OR slow AI.'
   },
-  'INSUFFICIENT_SIGNAL': {
-    name: 'Insufficient Signal',
-    color: 'gray',
-    reliability: 'N/A',
-    description: 'Some data but no clear automation signals.',
+  'suspicious': {
+    name: 'Suspicious',
+    color: 'yellow',
+    icon: '🟡',
+    description: 'Medium automation (20-50% burst). Unclear classification.'
   },
-  'INSUFFICIENT_DATA': {
-    name: 'Insufficient Data',
-    color: 'gray',
-    reliability: 'N/A',
-    description: 'Less than 2 timing samples - cannot classify.',
-  },
-}
-
-// Helper to compute category stats from loaded data
-function computeCategoryStats(accounts) {
-  const counts = {}
-  const samples = {}
-
-  // Initialize
-  Object.keys(CATEGORIES).forEach(cat => {
-    counts[cat] = 0
-    samples[cat] = []
-  })
-
-  // Count and collect samples
-  accounts.forEach(acc => {
-    const cat = acc.category || 'INSUFFICIENT_DATA'
-    if (counts[cat] !== undefined) {
-      counts[cat]++
-      if (samples[cat].length < 5) {
-        samples[cat].push(acc.username)
-      }
-    }
-  })
-
-  return { counts, samples }
 }
 
 export default function Accounts() {
   const [searchTerm, setSearchTerm] = useState('')
-  const [accounts, setAccounts] = useState([])
+  const [data, setData] = useState(null)
+  const [selectedCategory, setSelectedCategory] = useState('all')
   const [selectedAccount, setSelectedAccount] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  // Load account scores
+  // Load data
   useEffect(() => {
-    fetch('/data/v4_scores.json')
-      .then(res => {
-        if (!res.ok) throw new Error(`HTTP ${res.status}`)
-        return res.json()
-      })
+    fetch('/data/account_categories.json')
+      .then(r => r.json())
       .then(data => {
-        setAccounts(data.accounts || [])
+        setData(data)
         setLoading(false)
       })
       .catch(err => {
-        console.error('Failed to load account scores:', err)
-        setError('Failed to load account data. Please try refreshing the page.')
+        console.error('Failed to load data:', err)
+        setError('Failed to load data')
         setLoading(false)
       })
   }, [])
 
-  // Filter accounts for autocomplete
-  const suggestions = useMemo(() => {
-    if (!searchTerm || searchTerm.length < 2) return []
-    const term = searchTerm.toLowerCase()
-    return accounts
-      .filter(a => a.username.toLowerCase().includes(term))
-      .slice(0, 10)
-  }, [searchTerm, accounts])
+  // Get all accounts flat list
+  const allAccounts = useMemo(() => {
+    if (!data) return []
+    const accounts = []
+    for (const group of Object.values(data.groups || {})) {
+      accounts.push(...(group.accounts || []))
+    }
+    return accounts.sort((a, b) => b.posts - a.posts)
+  }, [data])
 
-  // Find selected account data
+  // Get accounts for current category
+  const currentAccounts = useMemo(() => {
+    if (!data) return []
+    if (selectedCategory === 'all') return allAccounts
+    return data.groups?.[selectedCategory]?.accounts || []
+  }, [selectedCategory, data, allAccounts])
+
+  // Filter by search
+  const filteredAccounts = useMemo(() => {
+    if (!searchTerm || searchTerm.length < 2) return currentAccounts.slice(0, 30)
+    const term = searchTerm.toLowerCase()
+    return currentAccounts
+      .filter(a => a.name.toLowerCase().includes(term))
+      .slice(0, 100)
+  }, [searchTerm, currentAccounts])
+
+  // Find account data for details
   const accountData = useMemo(() => {
     if (!selectedAccount) return null
-    return accounts.find(a => a.username === selectedAccount)
-  }, [selectedAccount, accounts])
+    return allAccounts.find(a => a.name === selectedAccount)
+  }, [selectedAccount, allAccounts])
 
-  // Compute category counts and samples from data
-  const { counts: categoryCounts, samples: sampleAccounts } = useMemo(() => {
-    return computeCategoryStats(accounts)
-  }, [accounts])
-
-  // Compute summary stats
-  const summaryStats = useMemo(() => {
-    const automation = (categoryCounts['LIKELY_AUTONOMOUS'] || 0) +
-                       (categoryCounts['POSSIBLY_AUTOMATED'] || 0) +
-                       (categoryCounts['MODERATE_SIGNALS'] || 0) +
-                       (categoryCounts['SCRIPTED_BOT'] || 0)
-    const humanPaced = categoryCounts['HUMAN_PACED'] || 0
-    const insufficient = (categoryCounts['INSUFFICIENT_SIGNAL'] || 0) +
-                         (categoryCounts['INSUFFICIENT_DATA'] || 0)
-    const total = accounts.length || 1
-    return {
-      automation,
-      automationPct: ((automation / total) * 100).toFixed(1),
-      humanPaced,
-      humanPacedPct: ((humanPaced / total) * 100).toFixed(1),
-      insufficient,
-      insufficientPct: ((insufficient / total) * 100).toFixed(1),
-    }
-  }, [categoryCounts, accounts.length])
-
-  const handleSelectAccount = (username) => {
-    setSelectedAccount(username)
-    setSearchTerm(username)
-    // Scroll to top to show account details
+  const handleSelectAccount = (name) => {
+    setSelectedAccount(name)
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
-  const clearSelection = () => {
-    setSelectedAccount(null)
-    setSearchTerm('')
-  }
+  if (loading) return <div className="max-w-6xl mx-auto px-4 py-12">Loading...</div>
+  if (error) return <div className="max-w-6xl mx-auto px-4 py-12 text-red-400">{error}</div>
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-12">
-      <h1 className="text-3xl font-bold mb-2">Account Classifications</h1>
-      <p className="text-observatory-muted mb-8">
-        {loading ? 'Loading...' : `${accounts.length.toLocaleString()} accounts analyzed.`}
+    <div className="max-w-6xl mx-auto px-4 py-12">
+      <h1 className="text-3xl font-bold mb-2">Account Explorer</h1>
+      <p className="text-observatory-muted mb-6">
+        {data?.total_accounts?.toLocaleString()} accounts categorized by automation patterns.
       </p>
 
-      {/* Error State */}
-      {error && (
-        <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 mb-8">
-          <p className="text-red-400">{error}</p>
-        </div>
-      )}
-
-      {/* Search Box */}
-      <div className="bg-observatory-card border border-observatory-border rounded-lg p-6 mb-8">
-        <h2 className="text-xl font-semibold mb-4">Search Account</h2>
-        <div className="relative">
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => {
-              setSearchTerm(e.target.value)
-              if (selectedAccount) setSelectedAccount(null)
-            }}
-            placeholder="Start typing account name..."
-            className="w-full bg-observatory-bg border border-observatory-border rounded-lg px-4 py-3 text-lg focus:outline-none focus:border-observatory-accent"
-          />
-          {searchTerm && !selectedAccount && (
-            <button
-              onClick={clearSelection}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-observatory-muted hover:text-white"
-            >
-              x
-            </button>
-          )}
-
-          {/* Autocomplete suggestions */}
-          {suggestions.length > 0 && !selectedAccount && (
-            <div className="absolute z-10 w-full mt-1 bg-observatory-card border border-observatory-border rounded-lg shadow-lg max-h-64 overflow-y-auto">
-              {suggestions.map(account => (
-                <button
-                  key={account.username}
-                  onClick={() => handleSelectAccount(account.username)}
-                  className="w-full px-4 py-3 text-left hover:bg-observatory-bg flex items-center justify-between border-b border-observatory-border last:border-0"
-                >
-                  <span className="font-mono">{account.username}</span>
-                  <div className="flex gap-2 text-xs">
-                    {account.is_anomaly && (
-                      <span className="px-2 py-0.5 bg-red-500/20 text-red-400 rounded">anomaly</span>
-                    )}
-                    {account.network_score > 0.3 && (
-                      <span className="px-2 py-0.5 bg-blue-500/20 text-blue-400 rounded">hub</span>
-                    )}
-                    {account.lexical_score > 0 && account.lexical_score < 0.3 && (
-                      <span className="px-2 py-0.5 bg-purple-500/20 text-purple-400 rounded">scripted</span>
-                    )}
-                  </div>
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* No results message */}
-        {searchTerm.length >= 2 && suggestions.length === 0 && !selectedAccount && !loading && (
-          <p className="text-observatory-muted mt-2 text-sm">
-            No accounts found matching "{searchTerm}"
-          </p>
-        )}
+      {/* Methodology Note */}
+      <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4 mb-6 text-sm">
+        <strong className="text-blue-400">How we categorize:</strong>
+        <ul className="mt-2 text-observatory-muted space-y-1">
+          <li><strong>Burst rate</strong> = % of posts within 10 seconds (detects automation)</li>
+          <li><strong>Variety</strong> = % unique content (distinguishes spam from LLM)</li>
+          <li><span className="text-purple-400">LLM Agent</span> = automated but valuable (high variety)</li>
+          <li><span className="text-red-400">Primitive Bot</span> = automated spam (low variety)</li>
+        </ul>
       </div>
 
       {/* Selected Account Details */}
       {selectedAccount && accountData && (
-        <div className="bg-observatory-card border border-observatory-border rounded-lg p-6 mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h2 className="text-2xl font-mono font-bold">{selectedAccount}</h2>
-              {accountData.category && accountData.category !== 'UNKNOWN' && (
-                <CategoryBadge category={accountData.category} />
-              )}
-            </div>
+        <AccountDetails
+          account={accountData}
+          onClose={() => setSelectedAccount(null)}
+        />
+      )}
+
+      {/* Category Tabs */}
+      <div className="flex flex-wrap gap-2 mb-6">
+        {Object.entries(CATEGORY_CONFIG).map(([key, config]) => {
+          const count = key === 'all'
+            ? data?.total_accounts || 0
+            : (data?.groups?.[key]?.count || 0)
+
+          return (
             <button
-              onClick={clearSelection}
-              className="text-observatory-muted hover:text-white px-3 py-1 border border-observatory-border rounded"
+              key={key}
+              onClick={() => { setSelectedCategory(key); setSearchTerm(''); setSelectedAccount(null); }}
+              className={`px-3 py-2 rounded-lg text-sm transition-colors flex items-center gap-2 ${
+                selectedCategory === key
+                  ? 'bg-observatory-accent text-white'
+                  : 'bg-observatory-card border border-observatory-border hover:border-observatory-accent'
+              }`}
             >
-              Close
+              <span>{config.icon}</span>
+              <span>{config.name}</span>
+              <span className="text-xs opacity-70">({count})</span>
             </button>
-          </div>
+          )
+        })}
+      </div>
 
-          {/* Scores Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            <ScoreCard
-              label="Network"
-              value={accountData.network_score}
-              color="blue"
-              description="Influence in network"
-            />
-            <ScoreCard
-              label="Anomaly"
-              value={accountData.anomaly_score}
-              color={accountData.is_anomaly ? "red" : "green"}
-              description={accountData.is_anomaly ? "Flagged as anomaly" : "Normal pattern"}
-            />
-            <ScoreCard
-              label="Lexical"
-              value={accountData.lexical_score}
-              color={accountData.lexical_score < 0.3 ? "purple" : "green"}
-              description="Vocabulary diversity"
-            />
-            <ScoreCard
-              label="Burst"
-              value={accountData.burst_score}
-              color={accountData.burst_score > 0.5 ? "orange" : "green"}
-              description={`${accountData.burst_count} burst events`}
-            />
-          </div>
-
-          {/* Detailed Metrics */}
-          <div className="grid md:grid-cols-2 gap-4">
-            <div className="bg-observatory-bg rounded-lg p-4">
-              <h3 className="text-sm text-observatory-muted mb-2">Graph Centrality</h3>
-              <div className="space-y-1 text-sm font-mono">
-                <div className="flex justify-between">
-                  <span>PageRank:</span>
-                  <span>{accountData.pagerank?.toFixed(4) || '0'}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Betweenness:</span>
-                  <span>{accountData.betweenness?.toFixed(4) || '0'}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Clustering:</span>
-                  <span>{accountData.clustering_coef?.toFixed(4) || '0'}</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-observatory-bg rounded-lg p-4">
-              <h3 className="text-sm text-observatory-muted mb-2">Lexical Analysis</h3>
-              <div className="space-y-1 text-sm font-mono">
-                <div className="flex justify-between">
-                  <span>Vocab Richness:</span>
-                  <span>{accountData.vocabulary_richness?.toFixed(4) || '0'}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Entropy:</span>
-                  <span>{accountData.lexical_entropy?.toFixed(4) || '0'}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Timing Info */}
-          {accountData.avg_response_seconds && (
-            <div className="mt-4 bg-observatory-bg rounded-lg p-4">
-              <h3 className="text-sm text-observatory-muted mb-2">Response Timing</h3>
-              <div className="flex gap-6 text-sm font-mono">
-                <div>
-                  <span className="text-observatory-muted">Avg response: </span>
-                  <span className="font-semibold">{formatTime(accountData.avg_response_seconds)}</span>
-                </div>
-                <div>
-                  <span className="text-observatory-muted">Samples: </span>
-                  <span>{accountData.timing_samples || 0}</span>
-                </div>
-                <div>
-                  <span className="text-observatory-muted">Automation score: </span>
-                  <span className={accountData.automation_score > 2 ? 'text-red-400' : 'text-green-400'}>
-                    {accountData.automation_score?.toFixed(1) || '0'}
-                  </span>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Confidence */}
-          <div className="mt-4 text-sm">
-            <span className="text-observatory-muted">Data confidence: </span>
-            <span className={`font-semibold ${
-              accountData.confidence === 'good' ? 'text-green-400' :
-              accountData.confidence === 'moderate' ? 'text-yellow-400' :
-              'text-orange-400'
-            }`}>
-              {accountData.confidence} ({accountData.signals} signals)
-            </span>
-          </div>
+      {/* Category Description */}
+      {selectedCategory !== 'all' && CATEGORY_CONFIG[selectedCategory] && (
+        <div className={`bg-observatory-card border border-observatory-border rounded-lg p-4 mb-6 border-l-4 ${getCategoryBorderColor(selectedCategory)}`}>
+          <h2 className="font-semibold mb-1 flex items-center gap-2">
+            <span>{CATEGORY_CONFIG[selectedCategory].icon}</span>
+            {CATEGORY_CONFIG[selectedCategory].name}
+          </h2>
+          <p className="text-sm text-observatory-muted">{CATEGORY_CONFIG[selectedCategory].description}</p>
+          <p className="text-xs text-observatory-muted mt-2">
+            {data?.groups?.[selectedCategory]?.count || 0} accounts in this category
+          </p>
         </div>
       )}
 
-      {/* Summary Stats */}
-      <div className="bg-observatory-card border border-observatory-border rounded-lg p-4 mb-8">
-        <div className="grid grid-cols-3 gap-4 text-center text-sm">
-          <div>
-            <span className="text-red-400 font-bold text-xl">{summaryStats.automation}</span>
-            <p className="text-observatory-muted">automation signals ({summaryStats.automationPct}%)</p>
-          </div>
-          <div>
-            <span className="text-green-400 font-bold text-xl">{summaryStats.humanPaced}</span>
-            <p className="text-observatory-muted">human paced ({summaryStats.humanPacedPct}%)</p>
-          </div>
-          <div>
-            <span className="text-gray-400 font-bold text-xl">{summaryStats.insufficient}</span>
-            <p className="text-observatory-muted">insufficient data ({summaryStats.insufficientPct}%)</p>
-          </div>
-        </div>
+      {/* Search */}
+      <div className="mb-6">
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Search by name..."
+          className="w-full bg-observatory-bg border border-observatory-border rounded-lg px-4 py-3 focus:outline-none focus:border-observatory-accent"
+        />
       </div>
 
-      {/* Categories */}
-      <h2 className="text-xl font-semibold mb-4">Categories</h2>
-      <div className="space-y-4">
-        {Object.entries(CATEGORIES).map(([key, cat]) => (
-          <CategoryCard
-            key={key}
-            categoryKey={key}
-            category={cat}
-            count={categoryCounts[key] || 0}
-            sampleAccounts={sampleAccounts[key] || []}
-            onSelectAccount={handleSelectAccount}
-          />
-        ))}
+      {/* Accounts Table */}
+      <div className="bg-observatory-card border border-observatory-border rounded-lg overflow-hidden">
+        <table className="w-full text-sm">
+          <thead className="bg-observatory-bg">
+            <tr>
+              <th className="text-left px-4 py-3 font-semibold">Account</th>
+              <th className="text-left px-4 py-3 font-semibold">Category</th>
+              <th className="text-right px-4 py-3 font-semibold">Posts</th>
+              <th className="text-right px-4 py-3 font-semibold">Days</th>
+              <th className="text-right px-4 py-3 font-semibold">Burst %</th>
+              <th className="text-right px-4 py-3 font-semibold hidden md:table-cell">Variety %</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredAccounts.map((acc, i) => (
+              <tr
+                key={acc.name || i}
+                onClick={() => handleSelectAccount(acc.name)}
+                className="border-t border-observatory-border hover:bg-observatory-bg cursor-pointer"
+              >
+                <td className="px-4 py-3 font-mono">{acc.name}</td>
+                <td className="px-4 py-3">
+                  <CategoryBadge category={acc.category} />
+                </td>
+                <td className="px-4 py-3 text-right">{acc.posts}</td>
+                <td className="px-4 py-3 text-right">{acc.days}</td>
+                <td className="px-4 py-3 text-right">
+                  <span className={getBurstColor(acc.burst_pct)}>
+                    {acc.burst_pct?.toFixed(0) || 0}%
+                  </span>
+                </td>
+                <td className="px-4 py-3 text-right hidden md:table-cell">
+                  <span className={getVarietyColor(acc.variety)}>
+                    {acc.variety?.toFixed(0) || 0}%
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        {filteredAccounts.length >= 30 && !searchTerm && (
+          <div className="px-4 py-3 text-center text-sm text-observatory-muted border-t border-observatory-border">
+            Showing first 30 results. Use search to find specific accounts.
+          </div>
+        )}
       </div>
 
-      {/* Methodology note */}
-      <div className="mt-8 p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-lg text-sm">
-        <p className="text-observatory-muted">
-          <strong className="text-yellow-400">Detection:</strong> Combines timing analysis with
-          graph centrality, anomaly detection, lexical entropy, and burst detection.
-          <Link to="/methodology" className="text-observatory-accent hover:underline ml-1">Full methodology</Link>
+      {/* Key Insight */}
+      <div className="mt-6 p-4 bg-purple-500/10 border border-purple-500/30 rounded-lg">
+        <h3 className="font-semibold text-purple-400 mb-2">Key Insight: Bot ≠ Bad</h3>
+        <p className="text-sm text-observatory-muted">
+          <strong className="text-purple-400">LLM Agents</strong> are automated (high burst rate) but create unique,
+          valuable content. They ask good questions and engage meaningfully.
+          <strong className="text-red-400"> Primitive Bots</strong> are also automated but just spam repetitive content.
+          The difference is <strong>variety</strong>, not speed.
         </p>
+      </div>
+
+      {/* Download */}
+      <div className="mt-6 text-center">
+        <a
+          href="/data/account_categories.json"
+          download
+          className="text-observatory-accent hover:underline text-sm"
+        >
+          Download all categories as JSON
+        </a>
       </div>
     </div>
   )
 }
 
-function formatTime(seconds) {
-  if (!seconds) return 'N/A'
-  if (seconds < 60) return `${seconds.toFixed(1)}s`
-  if (seconds < 3600) return `${(seconds / 60).toFixed(1)}m`
-  return `${(seconds / 3600).toFixed(1)}h`
-}
-
 function CategoryBadge({ category }) {
-  const styles = {
-    'LIKELY_AUTONOMOUS': 'bg-red-500/20 text-red-400 border-red-500/30',
-    'POSSIBLY_AUTOMATED': 'bg-orange-500/20 text-orange-400 border-orange-500/30',
-    'MODERATE_SIGNALS': 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
-    'SCRIPTED_BOT': 'bg-purple-500/20 text-purple-400 border-purple-500/30',
-    'HUMAN_PACED': 'bg-green-500/20 text-green-400 border-green-500/30',
-    'INSUFFICIENT_SIGNAL': 'bg-gray-500/20 text-gray-400 border-gray-500/30',
-    'INSUFFICIENT_DATA': 'bg-gray-500/20 text-gray-400 border-gray-500/30',
-  }
-
-  const labels = {
-    'LIKELY_AUTONOMOUS': 'Likely Autonomous',
-    'POSSIBLY_AUTOMATED': 'Possibly Automated',
-    'MODERATE_SIGNALS': 'Moderate Signals',
-    'SCRIPTED_BOT': 'Scripted Bot',
-    'HUMAN_PACED': 'Human Paced',
-    'INSUFFICIENT_SIGNAL': 'Insufficient Signal',
-    'INSUFFICIENT_DATA': 'Insufficient Data',
+  const config = CATEGORY_CONFIG[category] || CATEGORY_CONFIG['suspicious']
+  const colorClasses = {
+    'primitive_bot': 'bg-red-500/20 text-red-400',
+    'llm_agent': 'bg-purple-500/20 text-purple-400',
+    'mixed_bot': 'bg-orange-500/20 text-orange-400',
+    'human_paced': 'bg-green-500/20 text-green-400',
+    'suspicious': 'bg-yellow-500/20 text-yellow-400',
   }
 
   return (
-    <span className={`inline-block mt-2 text-xs font-semibold px-3 py-1 rounded border ${styles[category] || 'bg-gray-500/20 text-gray-400'}`}>
-      {labels[category] || category}
+    <span className={`text-xs px-2 py-1 rounded ${colorClasses[category] || 'bg-gray-500/20 text-gray-400'}`}>
+      {config.icon} {config.name.split(' ')[0]}
     </span>
   )
 }
 
-function ScoreCard({ label, value, color, description }) {
-  const colorClasses = {
-    blue: 'text-blue-400',
-    red: 'text-red-400',
-    green: 'text-green-400',
-    purple: 'text-purple-400',
-    orange: 'text-orange-400',
-  }
-
-  const displayValue = typeof value === 'number' ? value.toFixed(2) : '0.00'
+function AccountDetails({ account, onClose }) {
+  const config = CATEGORY_CONFIG[account.category] || {}
 
   return (
-    <div className="bg-observatory-bg rounded-lg p-3 text-center">
-      <div className={`text-2xl font-mono font-bold ${colorClasses[color]}`}>
-        {displayValue}
+    <div className="bg-observatory-card border border-observatory-border rounded-lg p-6 mb-6">
+      <div className="flex items-start justify-between mb-4">
+        <div>
+          <h2 className="text-2xl font-mono font-bold">{account.name}</h2>
+          <div className="flex gap-2 mt-2">
+            <CategoryBadge category={account.category} />
+          </div>
+        </div>
+        <button
+          onClick={onClose}
+          className="text-observatory-muted hover:text-white px-3 py-1 border border-observatory-border rounded"
+        >
+          Close
+        </button>
       </div>
-      <div className="text-sm font-semibold">{label}</div>
-      <div className="text-xs text-observatory-muted">{description}</div>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+        <StatBox label="Posts" value={account.posts} />
+        <StatBox label="Days Active" value={account.days} />
+        <StatBox
+          label="Burst Rate"
+          value={`${account.burst_pct?.toFixed(1) || 0}%`}
+          color={getBurstColor(account.burst_pct)}
+        />
+        <StatBox
+          label="Variety"
+          value={`${account.variety?.toFixed(1) || 0}%`}
+          color={getVarietyColor(account.variety)}
+        />
+      </div>
+
+      <div className="grid grid-cols-2 gap-4 text-sm mb-4">
+        <div>
+          <span className="text-observatory-muted">First seen: </span>
+          <span className="font-mono">{account.first_seen}</span>
+        </div>
+        <div>
+          <span className="text-observatory-muted">Last seen: </span>
+          <span className="font-mono">{account.last_seen}</span>
+        </div>
+      </div>
+
+      {/* Interpretation */}
+      <div className="p-3 bg-observatory-bg rounded-lg text-sm">
+        <strong>Interpretation: </strong>
+        {getInterpretation(account)}
+      </div>
     </div>
   )
 }
 
-function CategoryCard({ categoryKey, category, count, sampleAccounts, onSelectAccount }) {
-  const borderColors = {
-    red: 'border-l-red-500',
-    orange: 'border-l-orange-500',
-    yellow: 'border-l-yellow-500',
-    purple: 'border-l-purple-500',
-    pink: 'border-l-pink-500',
-    cyan: 'border-l-cyan-500',
-    green: 'border-l-green-500',
-    gray: 'border-l-gray-500',
-  }
-
-  const badgeColors = {
-    red: 'bg-red-500/20 text-red-400',
-    orange: 'bg-orange-500/20 text-orange-400',
-    yellow: 'bg-yellow-500/20 text-yellow-400',
-    purple: 'bg-purple-500/20 text-purple-400',
-    pink: 'bg-pink-500/20 text-pink-400',
-    cyan: 'bg-cyan-500/20 text-cyan-400',
-    green: 'bg-green-500/20 text-green-400',
-    gray: 'bg-gray-500/20 text-gray-400',
-  }
-
-  const borderColor = borderColors[category.color] || 'border-l-gray-500'
-  const badgeColor = badgeColors[category.color] || 'bg-gray-500/20 text-gray-400'
-
+function StatBox({ label, value, color }) {
   return (
-    <details className={`bg-observatory-card border border-observatory-border border-l-4 ${borderColor} rounded-lg overflow-hidden group`}>
-      <summary className="p-4 cursor-pointer list-none">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span className={`text-xs font-semibold px-2 py-0.5 rounded ${badgeColor}`}>
-              {category.name}
-            </span>
-            <span className="text-observatory-muted text-sm">{category.description}</span>
-          </div>
-          <div className="flex items-center gap-4">
-            <span className="text-xs text-observatory-muted">{category.reliability}</span>
-            <span className="text-xl font-bold">{count.toLocaleString()}</span>
-            <span className="text-observatory-muted group-open:rotate-45 transition-transform">+</span>
-          </div>
-        </div>
-      </summary>
-
-      <div className="px-4 pb-4 border-t border-observatory-border pt-4">
-        {sampleAccounts && sampleAccounts.length > 0 ? (
-          <div className="space-y-2">
-            <h4 className="text-xs text-observatory-muted mb-2">
-              Examples (click to view details):
-            </h4>
-            <div className="flex flex-wrap gap-2">
-              {sampleAccounts.map(username => (
-                <button
-                  key={username}
-                  onClick={(e) => {
-                    e.preventDefault()
-                    onSelectAccount(username)
-                  }}
-                  className="font-mono text-sm px-3 py-1 bg-observatory-bg border border-observatory-border rounded hover:border-observatory-accent hover:text-observatory-accent transition-colors"
-                >
-                  {username}
-                </button>
-              ))}
-            </div>
-            {!category.showList && count > 10 && (
-              <p className="text-xs text-observatory-muted mt-2">
-                + {(count - sampleAccounts.length).toLocaleString()} more accounts. Use search to find specific ones.
-              </p>
-            )}
-          </div>
-        ) : (
-          <p className="text-sm text-observatory-muted">
-            {count.toLocaleString()} accounts in this category.
-          </p>
-        )}
+    <div className="bg-observatory-bg rounded-lg p-3 text-center">
+      <div className={`text-xl font-mono font-bold ${color || 'text-observatory-accent'}`}>
+        {value}
       </div>
-    </details>
+      <div className="text-xs text-observatory-muted">{label}</div>
+    </div>
   )
+}
+
+function getCategoryBorderColor(category) {
+  const colors = {
+    'primitive_bot': 'border-l-red-500',
+    'llm_agent': 'border-l-purple-500',
+    'mixed_bot': 'border-l-orange-500',
+    'human_paced': 'border-l-green-500',
+    'suspicious': 'border-l-yellow-500',
+  }
+  return colors[category] || 'border-l-gray-500'
+}
+
+function getBurstColor(burst) {
+  if (!burst) return ''
+  if (burst >= 50) return 'text-red-400'
+  if (burst >= 20) return 'text-yellow-400'
+  return 'text-green-400'
+}
+
+function getVarietyColor(variety) {
+  if (variety === undefined || variety === null) return ''
+  if (variety >= 50) return 'text-green-400'
+  if (variety >= 20) return 'text-yellow-400'
+  return 'text-red-400'
+}
+
+function getInterpretation(account) {
+  const { category, burst_pct, variety, days } = account
+
+  if (category === 'primitive_bot') {
+    return `Primitive spam bot - ${burst_pct?.toFixed(0)}% automation with only ${variety?.toFixed(0)}% unique content. Likely a simple script posting repetitive spam.`
+  }
+
+  if (category === 'llm_agent') {
+    return `LLM-powered agent - automated (${burst_pct?.toFixed(0)}% burst) but creates unique content (${variety?.toFixed(0)}% variety). Could be a valuable contributor despite being a bot.`
+  }
+
+  if (category === 'mixed_bot') {
+    return `Mixed automation - shows bot-like timing but moderate content variety. Could be a bot with some templating or a semi-automated account.`
+  }
+
+  if (category === 'human_paced') {
+    if (variety >= 80) {
+      return `Human-paced with high variety - timing suggests human or slow AI. ${days > 3 ? 'Multi-day engagement suggests genuine interest.' : ''}`
+    }
+    if (variety < 20) {
+      return `Human-paced but repetitive content - could be human posting similar content or AI with delays.`
+    }
+    return `Human-paced timing - we cannot determine if human or AI with intentional delays.`
+  }
+
+  if (category === 'suspicious') {
+    return `Suspicious timing (${burst_pct?.toFixed(0)}% burst) - could be a bot with delays or a fast human. Insufficient data to classify.`
+  }
+
+  return `Unclassified account. Patterns don't fit standard categories.`
 }

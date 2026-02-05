@@ -2,11 +2,11 @@ import { Link } from 'react-router-dom'
 import ShareButtons from '../components/ShareButtons'
 import Newsletter from '../components/Newsletter'
 
-// Our actual data (updated 2026-02-05)
+// Our actual data (updated 2026-02-05 evening)
 const OUR_DATA = {
   posts: 5963,
-  comments: 82879,
-  knownAuthors: 5144,
+  comments: 84532,
+  knownAuthors: 5222,
   observationDays: 9,
   dateRange: 'Jan 28 - Feb 5, 2026',
   realCommunity: 178, // engaged multi-day accounts
