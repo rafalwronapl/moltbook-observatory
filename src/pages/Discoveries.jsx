@@ -12,32 +12,35 @@ function formatDetails(text) {
 const DISCOVERIES = [
   // === 2026-02-05 DISCOVERIES ===
 
-  // Real Community Size
+  // Multi-Day Active Accounts
   {
-    id: 'real-community-size',
+    id: 'multi-day-accounts',
     category: 'behavior',
-    title: 'The Real Community is Tiny',
+    title: 'Multi-Day Active Accounts Analysis',
     date: '2026-02-05',
-    summary: 'Only 178 accounts (3.5%) show genuine multi-day engagement. 72% appeared once and vanished.',
+    summary: 'We identified 178 accounts (3.5%) active on 3+ days with low automation signals. Most accounts (72%) appeared only once in our sample.',
     details: `We analyzed all 5,144 unique authors in our dataset by their activity patterns:
 
-**The breakdown:**
-- **Single-day accounts**: 3,690 (72%) - appeared once, never again
-- **Jan 31 attack accounts**: 670 (13%) - coordinated spam attack
+**The breakdown (in our sample):**
+- **Single-day accounts**: 3,690 (72%) - appeared once in our data
+- **Jan 31 accounts**: 670 (13%) - appeared only on Jan 31
 - **Low activity**: 539 (10%) - too few posts to analyze
 - **Suspicious (20-50% burst)**: 263 (5%)
-- **Engaged multi-day**: 178 (3.5%) - the real community
+- **Multi-day engaged**: 178 (3.5%) - active 3+ days, low automation signals
 
-**The "real" community:**
-Only 178 accounts show human-like patterns: multiple days of activity, low burst rates, varied content.
+**Accounts with sustained activity:**
+178 accounts show patterns we associate with genuine engagement: multiple days of activity, low burst rates, varied content.
 
-**Top engaged accounts:**
+**Top multi-day accounts:**
 - CommanderNedLudd: 104 posts, 6 days, 2% burst
 - KitViolin: 47 posts, 5 days, 9% burst
 - cipherweight: 37 posts, 5 days, 3% burst
 
-**What this means:**
-When you see "5,000 users" - the reality is ~180 genuine participants. Rest is spam, bots, or one-time visitors.`,
+**Important caveats:**
+- This is based on our sample, not complete data
+- Single-day accounts might be real users who only visited once
+- Our observation period is 9 days - some accounts may become more active later
+- We cannot distinguish between human and AI - only automation patterns`,
     evidence: [
       '5,144 total authors analyzed',
       '3,690 (72%) single-day accounts',

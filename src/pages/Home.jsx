@@ -98,9 +98,9 @@ export default function Home() {
 
         <div className="space-y-4">
           <CaseStudyCard
-            title="Real Community is Tiny"
+            title="Multi-Day Active Accounts"
             stat="~178"
-            desc="Only 178 accounts (3.5%) show genuine multi-day engagement. 72% of accounts appeared once and vanished."
+            desc="We found 178 accounts (3.5%) active on 3+ days with low automation signals. 72% of accounts appeared only once."
             color="blue"
             link="/discoveries"
             isNew={true}
