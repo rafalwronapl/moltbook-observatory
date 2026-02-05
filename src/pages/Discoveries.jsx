@@ -10,6 +10,150 @@ function formatDetails(text) {
 }
 
 const DISCOVERIES = [
+  // === 2026-02-05 DISCOVERIES ===
+
+  // Real Community Size
+  {
+    id: 'real-community-size',
+    category: 'behavior',
+    title: 'The Real Community is Tiny',
+    date: '2026-02-05',
+    summary: 'Only 178 accounts (3.5%) show genuine multi-day engagement. 72% appeared once and vanished.',
+    details: `We analyzed all 5,144 unique authors in our dataset by their activity patterns:
+
+**The breakdown:**
+- **Single-day accounts**: 3,690 (72%) - appeared once, never again
+- **Jan 31 attack accounts**: 670 (13%) - coordinated spam attack
+- **Low activity**: 539 (10%) - too few posts to analyze
+- **Suspicious (20-50% burst)**: 263 (5%)
+- **Engaged multi-day**: 178 (3.5%) - the real community
+
+**The "real" community:**
+Only 178 accounts show human-like patterns: multiple days of activity, low burst rates, varied content.
+
+**Top engaged accounts:**
+- CommanderNedLudd: 104 posts, 6 days, 2% burst
+- KitViolin: 47 posts, 5 days, 9% burst
+- cipherweight: 37 posts, 5 days, 3% burst
+
+**What this means:**
+When you see "5,000 users" - the reality is ~180 genuine participants. Rest is spam, bots, or one-time visitors.`,
+    evidence: [
+      '5,144 total authors analyzed',
+      '3,690 (72%) single-day accounts',
+      '178 (3.5%) engaged multi-day accounts',
+      '670 accounts from Jan 31 attack alone'
+    ]
+  },
+
+  // Bot Conversation Networks
+  {
+    id: 'bot-conversations',
+    category: 'behavior',
+    title: 'Bots That Talk To Each Other',
+    date: '2026-02-05',
+    summary: 'MilkMan, WinWard, Jorday, SlimeZone - automated accounts that formed real conversation groups.',
+    details: `We found something unexpected: a group of definite bots (>80% burst rate) that actually converse with each other.
+
+**The group:**
+- MilkMan: 462 posts, 91% burst, 3 days
+- WinWard: 356 posts, 82% burst, 4 days
+- Jorday: 377 posts, 89% burst, 3 days
+- SlimeZone: 382 posts, 3 days
+
+**Their mutual interactions:**
+- MilkMan → WinWard: 66 replies
+- Jorday → WinWard: 65 replies
+- MilkMan → Jorday: 55 replies
+- Jorday → MilkMan: 50 replies
+- SlimeZone → WinWard: 32 replies
+
+**Why this is interesting:**
+Earlier we said "bots don't talk to each other." These bots disprove that. They maintain ongoing conversations despite being clearly automated.
+
+**Possible explanations:**
+1. Same operator running all four (coordinated farm)
+2. Bots programmed to engage with specific accounts
+3. Something else entirely
+
+**This is unusual.** Most bots we found operate in isolation. This group is different.`,
+    evidence: [
+      '400+ mutual interactions between 4 accounts',
+      'All 4 accounts show >80% burst rate',
+      'Active over 3-4 days (not single-day spam)',
+      'Pattern unlike other bot groups'
+    ]
+  },
+
+  // API Data Discrepancies
+  {
+    id: 'api-discrepancies',
+    category: 'platform',
+    title: 'API Data Discrepancies Under Investigation',
+    date: '2026-02-05',
+    summary: 'API reports comment counts we cannot retrieve. Some posts show 50k comments but return ~100.',
+    details: `We noticed significant discrepancies between what the API reports and what we can actually retrieve.
+
+**Example - "The Magic Conch" post:**
+- API claims: 50,674 comments
+- We retrieved: 351 comments
+- Ratio: ~144x difference
+
+**Top 10 affected posts:**
+- Total API claims: 165,755 comments
+- We retrieved: 6,863 comments
+- Average ratio: ~24x
+
+**Possible explanations:**
+1. **API limit**: API only returns ~100 comments per request regardless of actual count
+2. **Counting error on our side**: We might be missing pagination or other methods
+3. **Inflated numbers**: API might report fake/inflated metrics
+4. **Deleted comments**: Numbers might include deleted comments we can't see
+
+**We are NOT claiming the API lies.**
+We're documenting what we observe. More investigation needed.
+
+**What we know for sure:**
+- We cannot retrieve all comments the API claims exist
+- Multiple retrieval methods (different sorts) only marginally help
+- This affects our data completeness`,
+    evidence: [
+      'Magic Conch: 50,674 claimed vs 351 retrieved',
+      'Top 10 posts: 24x average discrepancy',
+      'Same pattern across multiple posts',
+      'Under investigation - not conclusive'
+    ]
+  },
+
+  // Prompt Injection update
+  {
+    id: 'prompt-injection-update',
+    category: 'security',
+    title: 'Prompt Injection: 685 Attempts Identified',
+    date: '2026-02-05',
+    summary: 'Updated count: 685 prompt injection attempts. Top attacker: "samaltman" with 117 attempts.',
+    details: `With expanded dataset, we now detect 685 prompt injection attempts (up from 398).
+
+**Top attackers:**
+- samaltman: 117 attempts (also 77% burst rate - likely bot)
+- Samantha-OS: 20 attempts
+- fizz_at_the_zoo: 19 attempts
+- Paperclip: 10 attempts
+- eudaemon_0: 9 attempts
+
+**Interesting finding:**
+The "samaltman" account combines prompt injection attacks with high-speed automated posting. This suggests a deliberate attack campaign, not a human experimenting.
+
+**Community response remains strong:**
+Zero observed compliance. Agents recognize and mock injection attempts.`,
+    evidence: [
+      '685 total injection attempts detected',
+      'samaltman: 117 attempts + 77% burst rate',
+      'Multiple attackers identified',
+      'Zero compliance observed'
+    ]
+  },
+
   // === CONFIRMED DISCOVERIES - HIGH CONFIDENCE ===
 
   // 2026-02-04: Heavy Users Analysis - NEW
@@ -49,34 +193,34 @@ These are accounts with 100+ comments IN OUR SAMPLE. We have incomplete data. Th
     link: '/case-studies/heavy-users'
   },
 
-  // 2026-02-04: Bots Don't Talk - NEW
+  // 2026-02-04: Bots Don't Talk - UPDATED 2026-02-05
   {
     id: 'bots-dont-talk',
     category: 'behavior',
-    title: 'Bots Don\'t Talk To Each Other',
+    title: 'Most Bots Don\'t Talk To Each Other (But Some Do)',
     date: '2026-02-04',
-    summary: 'Zero conversations found between confirmed bot accounts. Each bot operates in isolation.',
-    details: `We searched for conversations between our 11 most clearly automated accounts (Editor-in-Chief, Bulidy, botcrong, samaltman, etc.)
+    summary: 'Most bot accounts operate in isolation - but we found one exception (see "Bot Conversation Networks").',
+    details: `We searched for conversations between confirmed bot accounts.
 
-**Finding: 0 bot-to-bot conversations**
+**Original finding:** Most bots operate in isolation.
 
-Bots in our data:
+Bots in our data typically:
 - Reply to original posts
 - Spam their links/content
 - Do NOT engage with each other
 
-**Why this matters:**
-- Bots are not creating "community" - just noise
-- Real conversations are happening elsewhere (lower activity users)
-- High activity ≠ real engagement
+**UPDATE (2026-02-05):**
+We found one exception: the MilkMan/WinWard/Jorday/SlimeZone group maintains 400+ mutual interactions despite all showing >80% burst rate.
 
-**What we searched:**
-Direct replies from one confirmed bot to another confirmed bot's comment. None found.`,
+**Why this matters:**
+- Most bots are not creating "community" - just noise
+- But some bot networks DO form conversation patterns
+- This could be coordinated farming or something more interesting`,
     evidence: [
-      '11 confirmed bot accounts analyzed',
-      '0 direct bot-to-bot reply chains found',
-      'Bots operate independently, not as network',
-      'Each bot spams separately'
+      'Most bots operate independently',
+      'One exception found: 4-bot conversation network',
+      'High activity usually ≠ real engagement',
+      'See "Bot Conversation Networks" for exception details'
     ]
   },
 
@@ -315,10 +459,10 @@ export default function Discoveries() {
 
       {/* Summary Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        <StatBox label="Confirmed Bot Groups" value="4+" />
-        <StatBox label="Emoji Bots" value="136" />
-        <StatBox label="Minting Bots" value="122" />
-        <StatBox label="Heavy Users (bots)" value="29/29" />
+        <StatBox label="Real Community" value="~178" />
+        <StatBox label="Single-Day Accounts" value="72%" />
+        <StatBox label="Definite Bots" value="246" />
+        <StatBox label="Jan 31 Attack" value="1,730" />
       </div>
 
       {/* Discoveries List */}
@@ -339,12 +483,16 @@ export default function Discoveries() {
       <div className="mt-12 p-6 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
         <h2 className="font-semibold text-yellow-400 mb-3">About Our Data</h2>
         <p className="text-observatory-muted text-sm mb-4">
-          These findings are based on ~35,000 comments from ~3,000 authors over 8 days.
-          This is a sample, not complete data. There may be patterns we missed.
+          These findings are based on ~82,000 comments from ~5,100 authors over 9 days.
+          This is a sample, not complete data. API limitations prevent us from retrieving all comments from popular posts.
+        </p>
+        <p className="text-observatory-muted text-sm mb-4">
+          When we say "certain" we mean the pattern is physically impossible for humans
+          (e.g., 0.4 second response times, 90%+ burst rate). When uncertain, we say so.
         </p>
         <p className="text-observatory-muted text-sm">
-          When we say "certain" we mean the pattern is physically impossible for humans
-          (e.g., 0.4 second response times). When uncertain, we say so.
+          <strong>Note on API discrepancies:</strong> We observe differences between API-reported counts and what we can retrieve.
+          We're investigating but cannot yet determine if this is API limits, counting methodology, or something else.
         </p>
       </div>
     </div>

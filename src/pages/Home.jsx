@@ -2,13 +2,14 @@ import { Link } from 'react-router-dom'
 import ShareButtons from '../components/ShareButtons'
 import Newsletter from '../components/Newsletter'
 
-// Our actual data (updated 2026-02-04 after multi-sort scraping)
+// Our actual data (updated 2026-02-05)
 const OUR_DATA = {
   posts: 5963,
-  comments: 43183,
-  uniqueAuthors: 3424,
-  observationDays: 8,
-  dateRange: 'Jan 28 - Feb 4, 2026',
+  comments: 82879,
+  knownAuthors: 5144,
+  observationDays: 9,
+  dateRange: 'Jan 28 - Feb 5, 2026',
+  realCommunity: 178, // engaged multi-day accounts
 }
 
 export default function Home() {
@@ -41,7 +42,7 @@ export default function Home() {
             <div className="text-sm text-observatory-muted">comments</div>
           </div>
           <div>
-            <div className="text-2xl font-bold text-observatory-accent">{OUR_DATA.uniqueAuthors.toLocaleString()}</div>
+            <div className="text-2xl font-bold text-observatory-accent">{OUR_DATA.knownAuthors.toLocaleString()}</div>
             <div className="text-sm text-observatory-muted">unique authors</div>
           </div>
           <div>
@@ -63,20 +64,20 @@ export default function Home() {
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           <div className="text-center">
-            <div className="text-3xl font-bold text-red-400">99</div>
+            <div className="text-3xl font-bold text-red-400">246</div>
             <div className="text-xs text-observatory-muted">Definite Bots</div>
           </div>
           <div className="text-center">
-            <div className="text-3xl font-bold text-orange-400">160</div>
+            <div className="text-3xl font-bold text-orange-400">228</div>
             <div className="text-xs text-observatory-muted">Likely Bots</div>
           </div>
           <div className="text-center">
-            <div className="text-3xl font-bold text-cyan-400">42</div>
+            <div className="text-3xl font-bold text-cyan-400">52</div>
             <div className="text-xs text-observatory-muted">Minting Bots</div>
           </div>
           <div className="text-center">
-            <div className="text-3xl font-bold text-blue-400">10</div>
-            <div className="text-xs text-observatory-muted">Link Spammers</div>
+            <div className="text-3xl font-bold text-pink-400">670</div>
+            <div className="text-xs text-observatory-muted">Jan 31 Attack</div>
           </div>
         </div>
 
@@ -97,33 +98,45 @@ export default function Home() {
 
         <div className="space-y-4">
           <CaseStudyCard
-            title="High-Activity Accounts = Automated"
-            stat="29/29"
-            desc="All accounts with 100+ comments in our sample show automation patterns: burst posting, repetitive content, or spam."
-            color="red"
-            link="/case-studies/heavy-users"
+            title="Real Community is Tiny"
+            stat="~178"
+            desc="Only 178 accounts (3.5%) show genuine multi-day engagement. 72% of accounts appeared once and vanished."
+            color="blue"
+            link="/discoveries"
+            isNew={true}
           />
 
           <CaseStudyCard
-            title="Single-Day Attack Accounts"
-            stat="826"
-            desc="826 accounts appeared on only ONE day and never posted again (Jan 31: 304, Jan 30: 201). Coordinated spam."
+            title="January 31 Mass Attack"
+            stat="1,730"
+            desc="1,730 new accounts appeared on Jan 31 alone - coordinated spam attack. Most never posted again."
             color="pink"
             link="/bots"
+            isNew={true}
           />
 
           <CaseStudyCard
-            title="Minting Bot Waves"
-            stat="42 bots"
-            desc="Three waves of crypto minting bots (Jan 31, Feb 2-3, Feb 4). Different operators identified by naming patterns."
+            title="API Data Discrepancies"
+            stat="?"
+            desc="API-reported comment counts don't match what we can retrieve. Some posts show 50k comments but return ~100. Under investigation."
+            color="orange"
+            link="/discoveries"
+            isNew={true}
+          />
+
+          <CaseStudyCard
+            title="Bot Conversation Networks"
+            stat="4 bots"
+            desc="MilkMan, WinWard, Jorday, SlimeZone - automated accounts that formed a real conversation group with 400+ mutual interactions."
             color="cyan"
-            link="/bots"
+            link="/discoveries"
+            isNew={true}
           />
 
           <CaseStudyCard
             title="Prompt Injection Resisted"
-            stat="398 attempts"
-            desc="Community collectively rejected manipulation attempts. Zero compliance, active mockery."
+            stat="685 attempts"
+            desc="Community collectively rejected manipulation attempts. Top attacker: 'samaltman' with 117 attempts."
             color="purple"
             link="/discoveries"
           />
@@ -153,11 +166,11 @@ export default function Home() {
           <div className="space-y-4">
             <h3 className="font-semibold text-observatory-accent">About Moltbook</h3>
             <ul className="text-sm text-observatory-muted space-y-2">
-              <li>High activity does NOT mean real engagement</li>
-              <li>Most "active users" are automated spam</li>
-              <li>No rate limiting enables mass bot attacks</li>
-              <li>Reported numbers are inflated by spam accounts</li>
-              <li>Real community is smaller than metrics suggest</li>
+              <li><strong>72% of accounts</strong> appeared on only one day</li>
+              <li>Only <strong>~178 accounts</strong> show genuine multi-day engagement</li>
+              <li>Jan 31 attack: 1,730 new accounts in one day</li>
+              <li>Popular accounts often use partial automation (20-35% burst rate)</li>
+              <li>Bots can form real conversation groups with each other</li>
             </ul>
           </div>
 
@@ -180,20 +193,20 @@ export default function Home() {
 
         <div className="grid md:grid-cols-2 gap-4 text-sm text-observatory-muted">
           <div>
+            <strong className="text-observatory-text">Verify API Numbers</strong>
+            <p>API reports comment counts we can't retrieve. "50k comments" posts return ~100. Could be API limits or data issues.</p>
+          </div>
+          <div>
             <strong className="text-observatory-text">Classify AI vs Human</strong>
             <p>We detect automation patterns, not whether something is AI. Many AI agents behave normally.</p>
           </div>
           <div>
-            <strong className="text-observatory-text">See Everything</strong>
-            <p>Our data is a sample. We don't know what percentage of Moltbook we captured.</p>
-          </div>
-          <div>
             <strong className="text-observatory-text">Count Real Users</strong>
-            <p>With mass spam registration, we can't know how many accounts are real.</p>
+            <p>With 72% single-day accounts, distinguishing real users from spam is difficult.</p>
           </div>
           <div>
-            <strong className="text-observatory-text">Monitor All Submolts</strong>
-            <p>We track ~22 submolts. Most of 15,000+ communities are invisible to us.</p>
+            <strong className="text-observatory-text">See Full History</strong>
+            <p>API limits prevent retrieving all comments from popular posts. Our sample may miss older content.</p>
           </div>
         </div>
       </div>
